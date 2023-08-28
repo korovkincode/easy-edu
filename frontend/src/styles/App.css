@@ -28,3 +28,10 @@ input {
 .error__label {
     color: red;
 }
+.navbar {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    background: #a8eb34;
+    align-items: center;
+}

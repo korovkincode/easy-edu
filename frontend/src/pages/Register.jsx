@@ -1,18 +1,23 @@
 import React from "react";
 import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context";
 
 const Register = () => {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const {username, setUsername} = useContext(AuthContext);
 
     const regUser = e => {
         e.preventDefault();
         // Make API Request to Register New user
+        localStorage.setItem("username", login);
+        setUsername(login);
         setLogin("");
         setPassword("");
-        setError("Этот логин уже занят! Попробуйте другой")
-    } 
+        //setError("Этот логин уже занят! Попробуйте другой");
+    }
 
     return (
         <div className="reg__form">
