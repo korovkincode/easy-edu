@@ -7,10 +7,15 @@ const Navbar = () => {
     return (
         <div className="navbar">
             {username !== "" &&
-                <h5>{username}</h5>
+                <>
+                    <div>{username}</div>
+                    <div className="nav__right">
+                        <button onClick={() => setUsername("")}>Выйти</button>
+                    </div>
+                </>
             }
             {username === "" &&
-                <h5>Войти</h5>
+                <span>Войти</span>
             }
         </div>
     )

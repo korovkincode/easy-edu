@@ -31,7 +31,14 @@ input {
 .navbar {
     height: 50px;
     width: 100%;
+    padding: 0 15px;
     display: flex;
     background: #a8eb34;
     align-items: center;
+}
+button {
+    display: inline-block;
+}
+.nav__right {
+    margin-left: auto;
 }
