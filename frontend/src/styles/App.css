@@ -8,11 +8,6 @@
     width: 0px;
 }
 
-#root {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 .reg__form {
     margin-top: 20px;
     border: 2px solid violet;
@@ -36,9 +31,10 @@ input {
     background: #a8eb34;
     align-items: center;
 }
-button {
-    display: inline-block;
-}
 .nav__right {
     margin-left: auto;
+}
+.course__card {
+    margin-bottom: 20px;
+    border: 2px solid firebrick;
 }

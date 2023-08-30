@@ -3,6 +3,7 @@ import "./styles/App.css";
 import Navbar from "./components/UI/Navbar/Navbar";
 import { AuthContext } from "./context";
 import { useState, useEffect } from "react";
+import Courses from "./pages/Courses";
 
 function App() {
 	const [username, setUsername] = useState("");
@@ -16,7 +17,7 @@ function App() {
 			username, setUsername
 		}}>
 			<Navbar />
-			<Register />
+			<Courses />
 		</AuthContext.Provider>
 	)
 }
