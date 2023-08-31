@@ -11,13 +11,15 @@ const Courses = () => {
     ];
     
     return (
-        <Grid container spacing={2}>
-            {courses.map((c, index) =>
-                <Grid item md={4}>
-                    <CourseCard card={c} key={index} />
-                </Grid>
-            )}
-        </Grid>
+        <div className="courses__container">
+            <Grid container spacing={2}>
+                {courses.map((c, index) =>
+                    <Grid item md={4}>
+                        <CourseCard card={c} key={index} />
+                    </Grid>
+                )}
+            </Grid>
+        </div>
     )
 }
 

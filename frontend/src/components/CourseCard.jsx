@@ -1,12 +1,18 @@
+import { Card, CardContent, Typography } from "@mui/material";
 import React from "react";
 
 const CourseCard = ({card}) => {
-    console.log(card);
     return (
-        <div className="course__card">
-            <h3>{card.name}</h3>
-            <h5>{card.teacher}</h5>
-        </div>
+        <Card variant="outlined">
+            <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    {card.teacher}
+                </Typography>
+                <Typography color="text.primary" variant="h5">
+                    {card.name}
+                </Typography>
+            </CardContent>
+        </Card>
     )
 } 
 
