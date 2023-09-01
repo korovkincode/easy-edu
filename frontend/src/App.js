@@ -4,6 +4,8 @@ import Navbar from "./components/UI/Navbar/Navbar";
 import { AuthContext } from "./context";
 import { useState, useEffect } from "react";
 import Courses from "./pages/Courses";
+import { BrowserRouter } from "react-router-dom";
+import AppRouter from "./components/AppRouter";
 
 function App() {
 	const [username, setUsername] = useState("");
@@ -16,8 +18,10 @@ function App() {
 		<AuthContext.Provider value={{
 			username, setUsername
 		}}>
-			<Navbar />
-			<Courses />
+			<BrowserRouter>
+				<Navbar />
+				<AppRouter />
+			</BrowserRouter>
 		</AuthContext.Provider>
 	)
 }

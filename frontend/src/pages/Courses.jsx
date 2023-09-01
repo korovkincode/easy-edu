@@ -12,7 +12,8 @@ const Courses = () => {
     
     return (
         <div className="courses__container">
-            <Grid container spacing={2}>
+            <h2>Your courses</h2>
+            <Grid style={{marginTop: 10}} container spacing={2}>
                 {courses.map((c, index) =>
                     <Grid item md={4}>
                         <CourseCard card={c} key={index} />

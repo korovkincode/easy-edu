@@ -7,8 +7,10 @@
 ::-webkit-scrollbar {
     width: 0px;
 }
-
 .reg__form {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 20px;
     border: 2px solid violet;
     padding: 15px;

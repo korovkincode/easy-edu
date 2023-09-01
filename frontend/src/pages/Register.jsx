@@ -12,11 +12,11 @@ const Register = () => {
     const regUser = e => {
         e.preventDefault();
         // Make API Request to Register New user
-        localStorage.setItem("username", login);
-        setUsername(login);
-        setLogin("");
-        setPassword("");
-        //setError("Этот логин уже занят! Попробуйте другой");
+        if (login === "" || password === "") setError("Заполните все поля");
+        else {
+            localStorage.setItem("username", login);
+            setUsername(login);
+        }
     }
 
     return (
