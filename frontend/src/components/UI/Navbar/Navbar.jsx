@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../../context";
+import { Button } from "@mui/material";
 
 const Navbar = () => {
     const {username, setUsername} = useContext(AuthContext);
@@ -13,9 +14,9 @@ const Navbar = () => {
         <div className="navbar">
             {username !== "" &&
                 <>
-                    <div>{username}</div>
+                    <div>Привет, <b>{username}</b></div>
                     <div className="nav__right">
-                        <button onClick={logout}>Выйти</button>
+                        <Button color="secondary" variant="outlined" size="small" onClick={logout}>Выйти</Button>
                     </div>
                 </>
             }

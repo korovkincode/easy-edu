@@ -6,7 +6,6 @@ import { AuthContext } from "../context";
 
 const AppRouter = () => {
     const {username, setUsername} = useContext(AuthContext);
-    console.log(username);
 
     return (
         <Routes>

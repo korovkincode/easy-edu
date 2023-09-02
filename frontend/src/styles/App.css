@@ -3,24 +3,13 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 ::-webkit-scrollbar {
     width: 0px;
 }
 .reg__form {
-    width: 300px;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20px;
-    border: 2px solid violet;
-    padding: 15px;
-}
-input {
-    display: block;
-}
-.reg__item {
-    font-size: medium;
-    margin-bottom: 10px;
 }
 .error__label {
     color: red;
@@ -28,17 +17,13 @@ input {
 .navbar {
     height: 50px;
     width: 100%;
-    padding: 0 15px;
+    padding: 0 20px;
     display: flex;
     background: #a8eb34;
     align-items: center;
 }
 .nav__right {
     margin-left: auto;
-}
-.course__card {
-    margin-bottom: 20px;
-    border: 2px solid firebrick;
 }
 .courses__container {
     width: 800px;
