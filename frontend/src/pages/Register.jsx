@@ -24,56 +24,55 @@ const Register = () => {
 	}
 
 	return (
-		<Container component="main" maxWidth="xs">
-		<Box sx={{
-			marginTop: 8,
-			display: 'flex',
-			flexDirection: 'column',
-			alignItems: 'center' }} >
-			
-			<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-				<LockOutlinedIcon />
-			</Avatar>
-			<Typography component="h1" variant="h5">
-				Регистрация
-			</Typography>
-			<Box component="form" noValidate sx={{ mt: 3 }}>
-				<Grid container spacing={2}>
-					{error !== "" &&
-						<Grid sx={{ mb: 2 }} item xs={12}>
-							<Typography sx={{ fontWeight: "bold" }} color="error">
-								{error}
-							</Typography>
+		<Container maxWidth="xs">
+			<Box sx={{
+				marginTop: 8,
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center" }}>
+				
+				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+					<LockOutlinedIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Регистрация
+				</Typography>
+				<Box component="form" noValidate sx={{ mt: 3 }}>
+					<Grid container spacing={2}>
+						{error !== "" &&
+							<Grid sx={{ mb: 2 }} item xs={12}>
+								<Typography sx={{ fontWeight: "bold" }} color="error">
+									{error}
+								</Typography>
+							</Grid>
+						}
+						<Grid item xs={12} sm={6}>
+							<TextField value={userData.name} onChange={e => setUserData({...userData, name: e.target.value})}
+							fullWidth label="Имя" />
 						</Grid>
-					}
-					<Grid item xs={12} sm={6}>
-						<TextField value={userData.name} onChange={e => setUserData({...userData, name: e.target.value})}
-						fullWidth label="Имя" />
-			  		</Grid>
-					<Grid item xs={12} sm={6}>
-						<TextField value={userData.surname} onChange={e => setUserData({...userData, surname: e.target.value})}
-						fullWidth label="Фамилия" />
-			  		</Grid>
-			  		<Grid item xs={12}>
-						<TextField value={userData.username} onChange={e => setUserData({...userData, username: e.target.value})}
-						fullWidth label="Логин" />
-			  		</Grid>
-			  		<Grid item xs={12}>
-						<TextField value={userData.password} onChange={e => setUserData({...userData, password: e.target.value})}
-						fullWidth label="Пароль" type="password" />
+						<Grid item xs={12} sm={6}>
+							<TextField value={userData.surname} onChange={e => setUserData({...userData, surname: e.target.value})}
+							fullWidth label="Фамилия" />
+						</Grid>
+						<Grid item xs={12}>
+							<TextField value={userData.username} onChange={e => setUserData({...userData, username: e.target.value})}
+							fullWidth label="Логин" />
+						</Grid>
+						<Grid item xs={12}>
+							<TextField value={userData.password} onChange={e => setUserData({...userData, password: e.target.value})}
+							fullWidth label="Пароль" type="password" />
+						</Grid>
 					</Grid>
-				</Grid>
-				<Button
-					type="submit"
-					onClick={regUser}
-					fullWidth
-					variant="contained"
-					sx={{ mt: 3, mb: 2 }}>
-					Зарегистрироваться
-				</Button>
+					<Button
+						type="submit"
+						onClick={regUser}
+						fullWidth
+						variant="contained"
+						sx={{ mt: 3, mb: 2 }}>
+						Зарегистрироваться
+					</Button>
+				</Box>
 			</Box>
-
-		</Box>
 	  </Container>
 	)
 }

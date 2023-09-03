@@ -6,11 +6,6 @@
 ::-webkit-scrollbar {
     width: 0px;
 }
-.reg__form {
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
 .error__label {
     color: red;
 }
@@ -26,8 +21,8 @@
     margin-left: auto;
 }
 .courses__container {
-    width: 800px;
     margin-top: 20px;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
 }
