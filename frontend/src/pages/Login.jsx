@@ -1,19 +1,19 @@
 import React from "react";
+import { TextField, Button, Box, Avatar, Typography, Grid, Container, Link as LinkMUI } from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context";
-import { TextField, Button, Box, Avatar, Typography, Grid, Container, Link as LinkMUI} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as LinkDOM } from "react-router-dom";
 
-const Register = () => {
-	const [userData, setUserData] = useState({name: "", surname: "", username: "", password: ""});
+const Login = () => {
+    const [userData, setUserData] = useState({username: "", password: ""});
 	const [error, setError] = useState("");
 	const {username, setUsername} = useContext(AuthContext);
 
-	const regUser = e => {
-		e.preventDefault();
-		// Make API Request to Register New user
+    const logUser = e => {
+        e.preventDefault();
+        // Make API Request to Login
 		for (let k in userData) {
 			if (userData[k] === "") {
 				setError("Заполните все поля");
@@ -22,10 +22,10 @@ const Register = () => {
 		}
 		localStorage.setItem("username", userData.username);
 		setUsername(userData.username);
-	}
+    }
 
-	return (
-		<Container maxWidth="xs">
+    return (
+        <Container maxWidth="xs">
 			<Box sx={{
 				marginTop: 8,
 				display: "flex",
@@ -36,7 +36,7 @@ const Register = () => {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Регистрация
+					Войти в аккаунт
 				</Typography>
 				<Box component="form" noValidate sx={{ mt: 3 }}>
 					<Grid container spacing={2}>
@@ -47,14 +47,6 @@ const Register = () => {
 								</Typography>
 							</Grid>
 						}
-						<Grid item xs={12} sm={6}>
-							<TextField required value={userData.name} onChange={e => setUserData({...userData, name: e.target.value})}
-							fullWidth label="Имя" />
-						</Grid>
-						<Grid item xs={12} sm={6}>
-							<TextField required value={userData.surname} onChange={e => setUserData({...userData, surname: e.target.value})}
-							fullWidth label="Фамилия" />
-						</Grid>
 						<Grid item xs={12}>
 							<TextField required value={userData.username} onChange={e => setUserData({...userData, username: e.target.value})}
 							fullWidth label="Логин" />
@@ -66,17 +58,17 @@ const Register = () => {
 					</Grid>
 					<Button
 						type="submit"
-						onClick={regUser}
+                        onClick={logUser}
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}>
-						Зарегистрироваться
+						Войти
 					</Button>
 				</Box>
-				<LinkDOM to="/login"><LinkMUI variant="body2">Уже есть аккаунт? Войти</LinkMUI></LinkDOM>
+                <LinkDOM to="/signup"><LinkMUI variant="body2">Ещё нет аккаунта? Зарегистрироваться</LinkMUI></LinkDOM>
 			</Box>
 	  </Container>
-	)
+    )
 }
 
-export default Register;
+export default Login;

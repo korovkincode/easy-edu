@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../../context";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const {username, setUsername} = useContext(AuthContext);
@@ -21,7 +22,7 @@ const Navbar = () => {
                 </>
             }
             {username === "" &&
-                <span>Войти</span>
+                <Link to="/signup"><Typography component="h4" variant="h7">Войти</Typography></Link>
             }
         </div>
     )

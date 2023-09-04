@@ -20,6 +20,7 @@ const AppRouter = () => {
             {username !== ""
                 ? <>
                     <Route path="/signup" element={<Navigate to="/courses" replace />} />
+                    <Route path="/login" element={<Navigate to="/courses" replace />} />
                     <Route path="/" element={<Navigate to="/courses" replace />} />
                   </>
                 : <>
