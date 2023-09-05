@@ -24,7 +24,9 @@ const AppRouter = () => {
                     <Route path="/" element={<Navigate to="/courses" replace />} />
                   </>
                 : <>
-                    <Route path="/courses" element={<Navigate to="/signup" replace />} />
+                    {privateRoutes.map(route => 
+                        <Route key={route.path} path={route.path} element={<Navigate to="/signup" replace />} />    
+                    )}
                     <Route path="/" element={<Navigate to="/signup" replace />} />
                   </>
             }

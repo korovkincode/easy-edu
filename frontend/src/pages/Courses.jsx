@@ -1,6 +1,6 @@
 import React from "react";
 import CourseCard from "../components/CourseCard";
-import { Grid, Box, Container } from "@mui/material";
+import { Grid, Box, Container, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -31,8 +31,8 @@ const Courses = () => {
         setCourses(newCourses);
     }
     useEffect(() => {
-        handleCourses(coursesAll, LIMIT, page)
-    }, [coursesAll, page]);
+        handleCourses(coursesAll, LIMIT, page);
+    }, [page]);
 
     return (
         <Container maxWidth="md">
@@ -42,7 +42,7 @@ const Courses = () => {
                 flexDirection: "column",
                 alignItems: "center" }}>
                 
-                <h2>Твои курсы</h2>
+                <Typography variant="h4" sx={{ alignSelf: "flex-start" }}>Твои курсы</Typography>
                 <Grid sx={{ marginTop: 2 }} container spacing={2}>
                     {courses.map((c, index) =>
                         <Grid item xs={12} sm={4} key={index}>
