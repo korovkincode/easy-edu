@@ -21,6 +21,10 @@ a {
     background: #a8eb34;
     align-items: center;
 }
+.nav__item {
+    margin-right: 30px;
+    font-weight: bold;
+}
 .nav__right {
     margin-left: auto;
 }

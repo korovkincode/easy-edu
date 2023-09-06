@@ -15,7 +15,8 @@ const Navbar = () => {
         <div className="navbar">
             {username !== "" &&
                 <>
-                    <div>Привет, <b>{username}</b></div>
+                    <div className="nav__item"><Link to={`/profile/${username}`}>{username}</Link></div>
+                    <div className="nav__item"><Link to="/courses">Курсы</Link></div>
                     <div className="nav__right">
                         <Button color="secondary" variant="outlined" size="small" onClick={logout}>Выйти</Button>
                     </div>

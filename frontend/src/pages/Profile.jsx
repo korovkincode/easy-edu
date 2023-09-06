@@ -36,6 +36,7 @@ const Profile = () => {
                         </Grid>
                     )}
                 </Grid>
+                <Typography variant="h6" sx={{ mt: 3, mb: 3, alignSelf: "flex-end" }}>Зарегистрирован: 06.09.2023</Typography>
             </Box>
         </Container>
     )
