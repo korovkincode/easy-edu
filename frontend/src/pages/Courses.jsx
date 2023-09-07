@@ -19,7 +19,7 @@ const Courses = () => {
     //Fake data to check pagination
     let coursesAll = [];
     for (let i = 0; i < 54; i++) {
-        coursesAll.push(coursesOriginal[i % 3]);
+        coursesAll.push({...coursesOriginal[i % 3], id: i + 1});
     }
 
     const handleCourses = (c, limit, p) => {

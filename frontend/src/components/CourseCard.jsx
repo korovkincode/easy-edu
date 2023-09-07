@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography, CardActions, Button } from "@mui/material";
+import { Link as LinkDOM } from "react-router-dom";
 import React from "react";
 
 const CourseCard = ({card}) => {
@@ -16,7 +17,7 @@ const CourseCard = ({card}) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Learn More</Button>
+                <Button variant="contained" size="small"><LinkDOM to={`/course/${card.id}`}>Learn More</LinkDOM></Button>
             </CardActions>
         </Card>
     )
