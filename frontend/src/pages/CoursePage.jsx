@@ -1,6 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Container, Box, Typography, Card, CardContent, Grid } from "@mui/material";
+import { Container, Box, Typography, Card, CardContent, Grid, TextField, InputAdornment, IconButton } from "@mui/material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import SendIcon from '@mui/icons-material/Send';
 
 const CoursePage = () => {
     const params = useParams();
@@ -22,6 +24,40 @@ const CoursePage = () => {
                         </div>
                     </div>
                 </div>
+                <Grid sx={{ mt: 1 }} container spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                        <Card variant="outlined">
+                            <CardContent>
+                                <Typography variant="h6" color="text.secondary">
+                                    Объявления
+                                </Typography>
+                                <Typography sx={{ mt: 2}} color="text.primary">
+                                    Нет текущих объявлений
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={8}>
+                        <Card variant="outlined">
+                            <TextField fullWidth placeholder="Оставьте комментарий" 
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <AccountCircle color="secondary" />
+                                        </InputAdornment>
+                                    ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton color="primary">
+                                                <SendIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                        </Card>
+                    </Grid>
+                </Grid>
             </Box>
         </Container>
     )
