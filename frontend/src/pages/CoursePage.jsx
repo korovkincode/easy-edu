@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Box, Typography, Card, CardContent, Grid, TextField, InputAdornment, IconButton } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -7,6 +8,8 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const CoursePage = () => {
     const params = useParams();
+    const [comment, setComment] = useState("");
+    const [allComments, setAllComments] = useState([]);
 
     //Make API Request
     const course = {id: params.id, name: "11A: PE", teacher: "Sam Sulek", desc: "Daily 3PM"};
@@ -16,6 +19,11 @@ const CoursePage = () => {
         {ttype: "Announcement", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"},
         {ttype: "Task", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"}
     ];
+
+    const addComment = () => {
+        setAllComments([...allComments, {name: localStorage.getItem("username"), comm: comment}]);
+        setComment("");
+    }
 
     return (
         <Container disableGutters maxWidth="lg">
@@ -49,7 +57,8 @@ const CoursePage = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Card variant="outlined">
-                                    <TextField fullWidth placeholder="Оставьте комментарий" 
+                                    <TextField value={comment} onChange={e => setComment(e.target.value)} 
+                                    fullWidth placeholder="Оставьте комментарий" 
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -58,14 +67,29 @@ const CoursePage = () => {
                                             ),
                                             endAdornment: (
                                                 <InputAdornment position="end">
-                                                    <IconButton color="primary">
+                                                    <IconButton onClick={addComment} color="primary">
                                                         <SendIcon />
-                                                    </IconButton>
+                                                    </IconButton>              
                                                 </InputAdornment>
                                             )
                                         }}
                                     />
                                 </Card>
+                            </Grid>
+                            <Grid item xs={12}>
+                                {allComments.map(c => 
+                                    <Card sx={{ mb: 3, border: "1px solid #A8A8A8" }}>
+                                        <CardContent>
+                                            <Typography sx={{ fontSize: 14 }} color="text.disabled" gutterBottom>
+                                                <AccountCircle sx={{ verticalAlign: "middle", mr: 1 }} />
+                                                {c.name}
+                                            </Typography>
+                                            <Typography color="text.primary">
+                                                {c.comm}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                )}
                             </Grid>
                             <Grid item xs={12}>
                                 {content.map(c =>
