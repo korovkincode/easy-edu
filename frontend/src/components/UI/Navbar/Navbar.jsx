@@ -1,31 +1,117 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../context";
-import { Button, Typography } from "@mui/material";
+import { IconButton, Typography, AppBar, Toolbar, Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import AddIcon from "@mui/icons-material/Add";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from '@mui/icons-material/Login';
 
 const Navbar = () => {
     const {username, setUsername} = useContext(AuthContext);
-    
+    const [anchorEl, setAnchorEl] = useState({menu: null, add: null, profile: null});
+
     const logout = () => {
         setUsername("");
         localStorage.removeItem("username");
     }
 
     return (
-        <div className="navbar">
-            {username !== "" &&
-                <>
-                    <div className="nav__item"><Link to={`/profile/${username}`}>{username}</Link></div>
-                    <div className="nav__item"><Link to="/courses">Курсы</Link></div>
-                    <div className="nav__right">
-                        <Button color="secondary" variant="outlined" size="small" onClick={logout}>Выйти</Button>
-                    </div>
-                </>
-            }
-            {username === "" &&
-                <Link to="/signup"><Typography component="h4" variant="h7">Войти</Typography></Link>
-            }
-        </div>
+        <AppBar sx={{ bgcolor: "#a8eb34", color: "black" }} position="static">
+            <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    sx={{ mr: 2 }}
+                    onClick={e => setAnchorEl({...anchorEl, menu: e.currentTarget})}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    EasyEdu
+                </Typography>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    sx={{ mr: 2 }}
+                    onClick={e => setAnchorEl({...anchorEl, add: e.currentTarget})}
+                >
+                    <AddIcon />
+                </IconButton>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    onClick={e => setAnchorEl({...anchorEl, profile: e.currentTarget})}
+                >
+                    <AccountCircle />
+                </IconButton>
+            </Toolbar>
+            <Menu
+                anchorEl={anchorEl.menu}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                open={Boolean(anchorEl.menu)}
+                onClose={() => setAnchorEl({...anchorEl, menu: null})}
+            >
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}><Link to="/courses">Курсы</Link></MenuItem>
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}>О платформе</MenuItem>
+            </Menu>
+            <Menu
+                anchorEl={anchorEl.add}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                open={Boolean(anchorEl.add)}
+                onClose={() => setAnchorEl({...anchorEl, add: null})}
+            >
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Присоединиться к курсу</MenuItem>
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Создать курс</MenuItem>
+            </Menu>
+            <Menu
+                anchorEl={anchorEl.profile}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                open={Boolean(anchorEl.profile)}
+                onClose={() => setAnchorEl({...anchorEl, profile: null})}
+            >
+                {username !== ""
+                ?   <>
+                        <MenuItem onClick={() => setAnchorEl({...anchorEl, profile: null})}>
+                            <Link to={`/profile/${username}`}>Профиль</Link>
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            setAnchorEl({...anchorEl, profile: null});
+                            logout();
+                        }}>
+                            <ListItemText primary="Выйти" />
+                            <ListItemIcon>
+                                <LogoutIcon sx={{ ml: 1 }} />
+                            </ListItemIcon>
+                        </MenuItem>
+                    </>
+                :   <Link to="/login">
+                        <MenuItem onClick={() => setAnchorEl({...anchorEl, profile: null})}>
+                            <ListItemText primary="Войти" />
+                            <ListItemIcon>
+                                <LoginIcon sx={{ ml: 1 }} />
+                            </ListItemIcon>
+                        </MenuItem>
+                    </Link>
+                }
+            </Menu>
+        </AppBar>
     )
 }
 

@@ -67,6 +67,9 @@ a {
     .course__wrap {
         height: 250px;
     }
+    .course__bg {
+        border-radius: 0;
+    }
 }
 @media screen and (max-width: 800px) {
     .course__wrap {

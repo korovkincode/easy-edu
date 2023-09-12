@@ -3,11 +3,13 @@ import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context";
 import { Box, Grid, Typography, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const UserForm = ({btnLabel, type}) => {
     const [userData, setUserData] = useState({name: "", surname: "", username: "", password: ""});
 	const [error, setError] = useState("");
 	const {username, setUsername} = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const regUser = e => {
 		e.preventDefault();
@@ -20,6 +22,7 @@ const UserForm = ({btnLabel, type}) => {
 		}
 		localStorage.setItem("username", userData.username);
 		setUsername(userData.username);
+        if (type === "change") navigate(`/profile/${userData.username}`);
 	}
 
     return (
