@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Container, Box, Typography, Avatar, Grid } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import UserForm from "../components/UserForm";
 import CourseCard from "../components/CourseCard";
 

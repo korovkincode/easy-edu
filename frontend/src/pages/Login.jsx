@@ -1,8 +1,7 @@
 import React from "react";
 import { TextField, Button, Box, Avatar, Typography, Grid, Container, Link as LinkMUI } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../context";
 import { Link as LinkDOM } from "react-router-dom";
 

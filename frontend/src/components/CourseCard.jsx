@@ -17,7 +17,9 @@ const CourseCard = ({card}) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button variant="contained" size="small"><LinkDOM to={`/course/${card.id}`}>Learn More</LinkDOM></Button>
+                <Button variant="contained" size="small">
+                    <LinkDOM to={`/course/${card.id}`}>Learn More</LinkDOM>
+                </Button>
             </CardActions>
         </Card>
     )

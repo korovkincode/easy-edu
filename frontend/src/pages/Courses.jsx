@@ -2,8 +2,7 @@ import React from "react";
 import CourseCard from "../components/CourseCard";
 import { Grid, Box, Container, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const Courses = () => {
     // Make API Request to Get Courses
@@ -42,7 +41,9 @@ const Courses = () => {
                 flexDirection: "column",
                 alignItems: "center" }}>
                 
-                <Typography variant="h4" sx={{ alignSelf: "flex-start" }}>Твои курсы</Typography>
+                <Typography variant="h4" sx={{ alignSelf: "flex-start" }}>
+                    Твои курсы
+                </Typography>
                 <Grid sx={{ marginTop: 2 }} container spacing={2}>
                     {courses.map((c, index) =>
                         <Grid item xs={12} sm={4} key={index}>

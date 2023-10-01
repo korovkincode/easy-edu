@@ -97,3 +97,7 @@ a {
         margin-bottom: 5px;
     }
 }
+.course__task:hover {
+    background: rgb(228,247,251);
+    cursor: pointer;
+}
