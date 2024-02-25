@@ -1,12 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Box, Typography, Card, CardContent, Grid, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Container, Box, Typography, Card, CardContent, Grid, TextField, InputAdornment, IconButton, CardHeader } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import SendIcon from "@mui/icons-material/Send";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link as LinkDOM } from "react-router-dom";
 import { getTodayDate } from "../utils/date";
+import { Theme, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const CoursePage = () => {
     const params = useParams();
@@ -26,6 +28,15 @@ const CoursePage = () => {
         setAllComments([...allComments, {name: localStorage.getItem("username"), comm: comment, date: getTodayDate()}]);
         setComment("");
     }
+
+    const theme = useTheme();
+    let charSlice;
+    const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
+    const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
+    const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
+    if (greaterThanMid) charSlice = 80;
+    else if (smallToMid) charSlice = 40;
+    else if (lessThanSmall) charSlice = 15;
 
     return (
         <Container disableGutters maxWidth="lg">
@@ -64,7 +75,7 @@ const CoursePage = () => {
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
-                                                    <AccountCircle color="secondary" />
+                                                    <AccountCircle sx={{ fontSize: "36px" }} color="secondary" />
                                                 </InputAdornment>
                                             ),
                                             endAdornment: (
@@ -86,18 +97,18 @@ const CoursePage = () => {
                             <Grid item xs={12}>
                                 {allComments.map(c => 
                                     <Card sx={{ mb: 1.5, border: "1px solid #A8A8A8" }}>
-                                        <CardContent>
-                                            <Typography sx={{ fontSize: 15 }}>
-                                                <AccountCircle sx={{ verticalAlign: "middle", mr: 1 }} />
-                                                {c.name}
-                                            </Typography>
-                                            <Typography sx={{ mt: -0.5, ml: 4, fontSize: 14 }} color="text.disabled" gutterBottom>
-                                                {
-                                                    c.date.split(" ")[2] == new Date().getFullYear()
+                                        <CardHeader 
+                                            title={<Typography sx={{ ml: -1, fontSize: 16 }}>{c.name}</Typography>}
+                                            subheader={
+                                                <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
+                                                    {c.date.split(" ")[2] == new Date().getFullYear()
                                                     ? c.date.replace(new Date().getFullYear().toString(), "")
-                                                    : c.date
-                                                }
-                                            </Typography>
+                                                    : c.date}
+                                                </Typography>
+                                            }
+                                            avatar={<AccountCircle sx={{ fontSize: "45px", verticalAlign: "middle" }} />}
+                                        />
+                                        <CardContent sx={{ mt: -2 }}>
                                             <Typography color="text.primary">
                                                 {c.comm}
                                             </Typography>
@@ -115,36 +126,48 @@ const CoursePage = () => {
                                         c.ttype === "Announcement"
                                         ?
                                             <Card sx={{ mb: 1.5, border: "1px solid #A8A8A8" }}>
-                                                <CardContent>
-                                                    <Typography sx={{ fontSize: 15 }}>
-                                                        <AccountCircle sx={{ verticalAlign: "middle", mr: 1 }} />
-                                                        {course.teacher}
-                                                    </Typography>
-                                                    <Typography sx={{ mt: -0.5, ml: 4, fontSize: 14 }} color="text.disabled" gutterBottom>
-                                                    {
-                                                        c.date.split(" ")[2] == new Date().getFullYear()
-                                                        ? c.date.replace(new Date().getFullYear().toString(), "")
-                                                        : c.date
+                                                <CardHeader 
+                                                    title={<Typography sx={{ ml: -1, fontSize: 16 }}>{course.teacher}</Typography>}
+                                                    subheader={
+                                                        <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
+                                                            {c.date.split(" ")[2] == new Date().getFullYear()
+                                                            ? c.date.replace(new Date().getFullYear().toString(), "")
+                                                            : c.date}
+                                                        </Typography>
                                                     }
-                                                    </Typography>
-                                                    <Typography sx={{ mt: 1 }} color="text.primary">
+                                                    avatar={<AccountCircle sx={{ fontSize: "45px", verticalAlign: "middle" }} />}
+                                                />
+                                                <CardContent sx={{ mt: -2 }}>
+                                                    <Typography color="text.primary">
                                                         {c.desc}
                                                     </Typography>
                                                 </CardContent>
                                             </Card>
                                         :
                                             <Card className="course__task" sx={{ mb: 1.5, border: "1px solid #A8A8A8" }}>
-                                                <CardContent>
-                                                    <LinkDOM to={`/course/${params.cid}/task/${c.id}`}>
-                                                        <Typography color="text.primary">
-                                                            <AssignmentIcon color="primary" sx={{ verticalAlign: "middle", mr: 1 }} />
-                                                            {course.teacher} опубликовал <b>{c.desc.slice(0, 50) + "..."}</b>
+                                                <LinkDOM to={`/course/${params.cid}/task/${c.id}`}>
+                                                <CardHeader
+                                                    title={
+                                                        <Typography sx={{ ml: -1 }}>
+                                                            {course.teacher} опубликовал <b>
+                                                            {c.desc.slice(0, charSlice) + (c.desc.length <= charSlice ? "": "...")}
+                                                            </b>
                                                         </Typography>
-                                                        <Typography sx={{ mt: -0.5, ml: 4, fontSize: 14 }} color="text.disabled">
-                                                            {c.date}
+                                                    }
+                                                    subheader={
+                                                        <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
+                                                            {c.date.split(" ")[2] == new Date().getFullYear()
+                                                            ? c.date.replace(new Date().getFullYear().toString(), "")
+                                                            : c.date}
                                                         </Typography>
-                                                    </LinkDOM>
-                                                </CardContent>
+                                                    }
+                                                    avatar={
+                                                        <AssignmentIcon color="primary"
+                                                            sx={{ fontSize: "45px", verticalAlign: "middle", mr: 1 }} 
+                                                        />
+                                                    }
+                                                />
+                                                </LinkDOM>
                                             </Card>
                                     )}
                                 </Grid>
