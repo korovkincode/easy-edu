@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Box, Typography, Card, CardContent, Grid, TextField, InputAdornment, IconButton, CardHeader } from "@mui/material";
+import { Container, Box, Typography, Card, CardHeader, CardContent, Grid, TextField, InputAdornment, IconButton, Avatar } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import SendIcon from "@mui/icons-material/Send";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -162,9 +162,9 @@ const CoursePage = () => {
                                                         </Typography>
                                                     }
                                                     avatar={
-                                                        <AssignmentIcon color="primary"
-                                                            sx={{ fontSize: "45px", verticalAlign: "middle", mr: 1 }} 
-                                                        />
+                                                        <Avatar sx={{ width: "42px", height: "42px", bgcolor: "#1976D2" }}>
+                                                            <AssignmentIcon />
+                                                        </Avatar>
                                                     }
                                                 />
                                                 </LinkDOM>
