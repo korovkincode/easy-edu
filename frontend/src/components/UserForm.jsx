@@ -16,7 +16,7 @@ const UserForm = ({btnLabel, type}) => {
 		// Make API Request to Register New user
 		for (let k in userData) {
 			if (userData[k] === "") {
-				setError("Заполните все поля");
+				setError("Fill in all the fields");
 				return;
 			}
 		}
@@ -37,19 +37,19 @@ const UserForm = ({btnLabel, type}) => {
                 }
                 <Grid item xs={12} sm={6}>
                     <TextField required value={userData.name} onChange={e => setUserData({...userData, name: e.target.value})}
-                    fullWidth label="Имя" />
+                    fullWidth label="First Name" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField required value={userData.surname} onChange={e => setUserData({...userData, surname: e.target.value})}
-                    fullWidth label="Фамилия" />
+                    fullWidth label="Last Name" />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField required value={userData.username} onChange={e => setUserData({...userData, username: e.target.value})}
-                    fullWidth label="Логин" />
+                    fullWidth label="Login" />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField required value={userData.password} onChange={e => setUserData({...userData, password: e.target.value})}
-                    fullWidth label="Пароль" type="password" />
+                    fullWidth label="Password" type="password" />
                 </Grid>
             </Grid>
             <Button

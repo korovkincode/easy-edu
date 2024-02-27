@@ -42,7 +42,7 @@ const Courses = () => {
                 alignItems: "center" }}>
                 
                 <Typography variant="h4" sx={{ alignSelf: "flex-start" }}>
-                    Твои курсы
+                    Your courses
                 </Typography>
                 <Grid sx={{ marginTop: 2 }} container spacing={2}>
                     {courses.map((c, index) =>

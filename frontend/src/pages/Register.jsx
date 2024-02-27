@@ -18,10 +18,10 @@ const Register = () => {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Регистрация
+					Signup
 				</Typography>
-				<UserForm btnLabel="Зарегистрироваться" type="signup" />
-				<LinkDOM to="/login"><LinkMUI variant="body2">Уже есть аккаунт? Войти</LinkMUI></LinkDOM>
+				<UserForm btnLabel="Signup" type="signup" />
+				<LinkDOM to="/login"><LinkMUI variant="body2">Already have an account? Login</LinkMUI></LinkDOM>
 			</Box>
 	  </Container>
 	)

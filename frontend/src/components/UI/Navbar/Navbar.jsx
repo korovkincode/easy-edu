@@ -60,8 +60,8 @@ const Navbar = () => {
                 open={Boolean(anchorEl.menu)}
                 onClose={() => setAnchorEl({...anchorEl, menu: null})}
             >
-                <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}><Link to="/courses">Курсы</Link></MenuItem>
-                <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}>О платформе</MenuItem>
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}><Link to="/courses">Courses</Link></MenuItem>
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}>About Us</MenuItem>
             </Menu>
             <Menu
                 anchorEl={anchorEl.add}
@@ -73,8 +73,8 @@ const Navbar = () => {
                 open={Boolean(anchorEl.add)}
                 onClose={() => setAnchorEl({...anchorEl, add: null})}
             >
-                <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Присоединиться к курсу</MenuItem>
-                <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Создать курс</MenuItem>
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Join</MenuItem>
+                <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Add</MenuItem>
             </Menu>
             <Menu
                 anchorEl={anchorEl.profile}
@@ -89,13 +89,13 @@ const Navbar = () => {
                 {username !== ""
                 ?   <>
                         <MenuItem onClick={() => setAnchorEl({...anchorEl, profile: null})}>
-                            <Link to={`/profile/${username}`}>Профиль</Link>
+                            <Link to={`/profile/${username}`}>Profile</Link>
                         </MenuItem>
                         <MenuItem onClick={() => {
                             setAnchorEl({...anchorEl, profile: null});
                             logout();
                         }}>
-                            <ListItemText primary="Выйти" />
+                            <ListItemText primary="Logout" />
                             <ListItemIcon>
                                 <LogoutIcon sx={{ ml: 1 }} />
                             </ListItemIcon>
@@ -103,7 +103,7 @@ const Navbar = () => {
                     </>
                 :   <Link to="/login">
                         <MenuItem onClick={() => setAnchorEl({...anchorEl, profile: null})}>
-                            <ListItemText primary="Войти" />
+                            <ListItemText primary="Login" />
                             <ListItemIcon>
                                 <LoginIcon sx={{ ml: 1 }} />
                             </ListItemIcon>

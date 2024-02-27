@@ -15,7 +15,7 @@ const Login = () => {
         // Make API Request to Login
 		for (let k in userData) {
 			if (userData[k] === "") {
-				setError("Заполните все поля");
+				setError("Fill in all the fields");
 				return;
 			}
 		}
@@ -35,7 +35,7 @@ const Login = () => {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Войти в аккаунт
+					Login to account
 				</Typography>
 				<Box component="form" noValidate sx={{ mt: 3 }}>
 					<Grid container spacing={2}>
@@ -48,11 +48,11 @@ const Login = () => {
 						}
 						<Grid item xs={12}>
 							<TextField required value={userData.username} onChange={e => setUserData({...userData, username: e.target.value})}
-							fullWidth label="Логин" />
+							fullWidth label="Login" />
 						</Grid>
 						<Grid item xs={12}>
 							<TextField required value={userData.password} onChange={e => setUserData({...userData, password: e.target.value})}
-							fullWidth label="Пароль" type="password" />
+							fullWidth label="Password" type="password" />
 						</Grid>
 					</Grid>
 					<Button
@@ -61,10 +61,10 @@ const Login = () => {
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2 }}>
-						Войти
+						Login
 					</Button>
 				</Box>
-                <LinkDOM to="/signup"><LinkMUI variant="body2">Ещё нет аккаунта? Зарегистрироваться</LinkMUI></LinkDOM>
+                <LinkDOM to="/signup"><LinkMUI variant="body2">Don't have an account yet? Signup</LinkMUI></LinkDOM>
 			</Box>
 	  </Container>
     )

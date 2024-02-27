@@ -58,10 +58,10 @@ const CoursePage = () => {
                         <Card variant="outlined">
                             <CardContent>
                                 <Typography variant="h6" color="text.secondary">
-                                    Объявления
+                                    Announcements
                                 </Typography>
                                 <Typography sx={{ mt: 2 }} color="text.primary">
-                                    Нет текущих объявлений
+                                    No current announcements
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -71,7 +71,7 @@ const CoursePage = () => {
                             <Grid item xs={12}>
                                 <Card variant="outlined">
                                     <TextField value={comment} onChange={e => setComment(e.target.value)} 
-                                    fullWidth placeholder="Оставьте комментарий" 
+                                    fullWidth placeholder="Leave a comment" 
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -91,7 +91,7 @@ const CoursePage = () => {
                             </Grid>
                             {allComments.length > 0 &&
                                 <Typography sx={{ mt: 2, ml: 2 }} variant="h5" color="text.secondary">
-                                    Комментарии
+                                    Commentaries
                                 </Typography>
                             }
                             <Grid item xs={12}>
@@ -117,7 +117,7 @@ const CoursePage = () => {
                                 )}
                             </Grid>
                             <Typography sx={{ mt: 2.5, ml: 2 }} variant="h5" color="text.secondary">
-                                Материалы
+                                Materials
                             </Typography>
                             {content.length > 0
                                 ?
@@ -173,7 +173,7 @@ const CoursePage = () => {
                                 </Grid>
                                 :
                                 <Typography sx={{ mt: 2, ml: 2 }} variant="h5">
-                                    Тут пока пусто
+                                    It is empty here yet
                                 </Typography>
                             }
                             

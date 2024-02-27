@@ -26,9 +26,9 @@ const Profile = () => {
 				</Avatar>
                 <Typography component="h1" variant="h5" sx={{ fontWeight: "bold" }}>{params.username}</Typography>
                 {localStorage.getItem("username") === params.username && 
-                    <UserForm btnLabel="Сохранить изменения" type="change" />
+                    <UserForm btnLabel="Save Changes" type="change" />
                 }
-                <Typography component="h3" variant="h6" sx={{ mt: 3, alignSelf: "flex-start" }}>Состоит в курсах:</Typography>
+                <Typography component="h3" variant="h6" sx={{ mt: 3, alignSelf: "flex-start" }}>Subscribed to courses:</Typography>
                 <Grid sx={{ mt: 2, mb: 3 }} container spacing={2}>
                     {courses.map((c, index) =>
                         <Grid item xs={12} key={index}>
@@ -36,7 +36,7 @@ const Profile = () => {
                         </Grid>
                     )}
                 </Grid>
-                <Typography variant="h6" sx={{ mt: 3, mb: 3, alignSelf: "flex-end" }}>Зарегистрирован: 06.09.2023</Typography>
+                <Typography variant="h6" sx={{ mt: 3, mb: 3, alignSelf: "flex-end" }}>Signed up: 06.09.2023</Typography>
             </Box>
         </Container>
     )
