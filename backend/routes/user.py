@@ -3,10 +3,24 @@ sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
 from config.config import EasyEduDB
-from models.models import UserModel
+from models.models import UserModel, UserCredentials
 import uuid
 
 router = APIRouter()
+
+@router.post("/auth")
+async def authUser(userData: UserCredentials):
+    userData = userData.dict()
+    findUser = EasyEduDB.Users.find_one({"username": userData["username"], "password": userData["password"]})
+    if findUser is None:
+        return {
+            "response-type": "Error",
+            "description": "No such user"
+        }
+    return {
+        "response-type": "Success",
+        "data": findUser["userToken"]
+    }
 
 @router.post("/")
 async def createUser(userData: UserModel):
@@ -15,7 +29,7 @@ async def createUser(userData: UserModel):
     if EasyEduDB.Users.find_one({"username": userData["username"]}) is not None:
         return {
             "response-type": "Error",
-            "description": "Username should be unique"
+            "description": "This username is already taken"
         }
     try:
         EasyEduDB.Users.insert_one(userData)

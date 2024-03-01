@@ -5,11 +5,11 @@ import { useContext } from "react";
 import { AuthContext } from "../context";
 
 const AppRouter = () => {
-    const {username, setUsername} = useContext(AuthContext);
+    const {userToken, setUserToken} = useContext(AuthContext);
 
     return (
         <Routes>
-            {username !== ""
+            {userToken !== ""
                 ? privateRoutes.map(route => 
                     <Route key={route.path} path={route.path} element={<route.component />} />   
                 )
@@ -17,7 +17,7 @@ const AppRouter = () => {
                     <Route key={route.path} path={route.path} element={<route.component />} />    
                 )
             }
-            {username !== ""
+            {userToken !== ""
                 ? <>
                     <Route path="/signup" element={<Navigate to="/courses" replace />} />
                     <Route path="/login" element={<Navigate to="/courses" replace />} />

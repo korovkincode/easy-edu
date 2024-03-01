@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 from typing import Optional
 
+class UserCredentials(BaseModel):
+    username: str
+    password: str
+
 class UserModel(BaseModel):
     userToken: Optional[str] = None
     username: str

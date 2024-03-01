@@ -7,13 +7,15 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from '@mui/icons-material/Login';
+import { useEffect } from "react";
 
 const Navbar = () => {
-    const {username, setUsername} = useContext(AuthContext);
+    const {userToken, setUserToken} = useContext(AuthContext);
     const [anchorEl, setAnchorEl] = useState({menu: null, add: null, profile: null});
-
+    const username = localStorage.getItem("username");    
+    
     const logout = () => {
-        setUsername("");
+        setUserToken("");
         localStorage.removeItem("username");
     }
 
@@ -86,7 +88,7 @@ const Navbar = () => {
                 open={Boolean(anchorEl.profile)}
                 onClose={() => setAnchorEl({...anchorEl, profile: null})}
             >
-                {username !== ""
+                {userToken !== ""
                 ?   <>
                         <MenuItem onClick={() => setAnchorEl({...anchorEl, profile: null})}>
                             <Link to={`/profile/${username}`}>Profile</Link>

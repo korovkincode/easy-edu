@@ -6,21 +6,34 @@ import { AuthContext } from "../context";
 import { Link as LinkDOM } from "react-router-dom";
 
 const Login = () => {
-    const [userData, setUserData] = useState({username: "", password: ""});
+    const [userData, setUserData] = useState({username: null, password: null});
 	const [error, setError] = useState("");
-	const {username, setUsername} = useContext(AuthContext);
+	const {userToken, setUserToken} = useContext(AuthContext);
 
-    const logUser = e => {
+    const logUser = async e => {
         e.preventDefault();
-        // Make API Request to Login
-		for (let k in userData) {
-			if (userData[k] === "") {
+        setError("");
+		for (let field in userData) {
+			if (userData[field] === null || userData[field] === "") {
 				setError("Fill in all the fields");
 				return;
 			}
 		}
+		// Make API Request to Login
+		const response = await fetch("http://127.0.0.1:8080/user/auth", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify(userData)
+        });
+        const responseJSON = await response.json();
+        if (responseJSON["response-type"] === "Error") {
+            setError(responseJSON.description);
+            return;
+        }
+        setUserToken(responseJSON.data);
 		localStorage.setItem("username", userData.username);
-		setUsername(userData.username);
     }
 
     return (
