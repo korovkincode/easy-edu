@@ -34,6 +34,7 @@ const Login = () => {
         }
         setUserToken(responseJSON.data);
 		localStorage.setItem("username", userData.username);
+		localStorage.setItem("userToken", responseJSON.data);
     }
 
     return (

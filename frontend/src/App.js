@@ -8,7 +8,11 @@ import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 
 function App() {
-	const [userToken, setUserToken] = useState("");
+	const [userToken, setUserToken] = useState(localStorage.getItem("userToken") || "");
+
+	useEffect(() => {
+		localStorage.setItem("userToken", userToken);
+	}, [userToken]);
 
 	return (
 		<AuthContext.Provider value={{

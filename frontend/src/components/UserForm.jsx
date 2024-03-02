@@ -69,7 +69,10 @@ const UserForm = ({btnLabel, type}) => {
             return;
         }
 		localStorage.setItem("username", userData.username);
-        if (type === "signup") setUserToken(responseJSON.data);
+        if (type === "signup") {
+            localStorage.setItem("userToken", responseJSON.data);
+            setUserToken(responseJSON.data);
+        }
         if (type === "change") navigate(`/profile/${userData.username}`);
 	}
 
