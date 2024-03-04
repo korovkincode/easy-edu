@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.user import router as UserRouter
+from routes.course import router as CourseRouter
 from config.config import EasyEduDB
 
 app = FastAPI()
@@ -28,3 +29,4 @@ async def root():
 
 
 app.include_router(UserRouter, tags=["Users"], prefix="/user")
+app.include_router(CourseRouter, tags=["Courses"], prefix="/course")

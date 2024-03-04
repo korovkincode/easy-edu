@@ -11,7 +11,10 @@ router = APIRouter()
 @router.post("/auth")
 async def authUser(userData: UserCredentials):
     userData = userData.dict()
-    findUser = EasyEduDB.Users.find_one({"username": userData["username"], "password": userData["password"]})
+    findUser = EasyEduDB.Users.find_one({
+        "username": userData["username"],
+        "password": userData["password"]
+    })
     if findUser is None:
         return {
             "response-type": "Error",
@@ -46,7 +49,10 @@ async def createUser(userData: UserModel):
         
 @router.get("/{userToken}")
 async def readUser(userToken: str):
-    userData = EasyEduDB.Users.find_one({"userToken": userToken}, {"_id": 0, "password": 0})
+    userData = EasyEduDB.Users.find_one(
+        {"userToken": userToken},
+        {"_id": 0, "password": 0}
+    )
     if userData is not None:
         return {
             "response-type": "Success",

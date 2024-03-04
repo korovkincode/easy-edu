@@ -8,3 +8,5 @@ class EasyEduDB:
         cls.client = MongoClient(cls.URI)
         cls.db = cls.client.EasyEdu
         cls.Users = cls.db.Users
+        cls.UsersToCourses = cls.db.UsersToCourses
+        cls.Courses = cls.db.Courses

@@ -12,3 +12,8 @@ class UserModel(BaseModel):
     name: str
     surname: str
     birthday: str
+
+class CourseModel(BaseModel):
+    authorToken: str
+    name: str
+    description: str
