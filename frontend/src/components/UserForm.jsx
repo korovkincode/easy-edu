@@ -6,6 +6,7 @@ import { Box, Grid, Typography, TextField, Button } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useNavigate } from "react-router-dom";
+import { APICall } from "../utils/API";
 
 const UserForm = ({btnLabel, type}) => {
     const [userData, setUserData] = useState({
@@ -14,20 +15,15 @@ const UserForm = ({btnLabel, type}) => {
 	const [error, setError] = useState("");
     const navigate = useNavigate();
     const {userToken, setUserToken} = useContext(AuthContext);
-    const requestParams = {};
     let birthdayInput, formatDate;
 
     useEffect(() => {
         async function getUserData() {
-            requestParams.path = `http://127.0.0.1:8080/user/${userToken}`;
-            requestParams.method = "GET";
-            const response = await fetch(requestParams.path, {
-                method: requestParams.method,
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                }
-            });
-            const responseJSON = await response.json();
+            const requestParams = {
+                path: `http://127.0.0.1:8080/user/${userToken}`,
+                method: "GET",
+            };
+            const responseJSON = await APICall(requestParams);
             birthdayInput = responseJSON.data.birthday.split(".");
             formatDate = `${birthdayInput[2]}-${birthdayInput[1]}-${birthdayInput[0]}`;
             setUserData({...responseJSON.data, password: "", birthday: formatDate});
@@ -50,20 +46,14 @@ const UserForm = ({btnLabel, type}) => {
         } else {
             formatDate = `${Math.floor(userData.birthday.$D / 10)}${userData.birthday.$D % 10}.${Math.floor((userData.birthday.$M + 1) / 10)}${(userData.birthday.$M + 1) % 10}.${userData.birthday.$y}`;
         }
-        // Make API Request to Register New user
-        requestParams.path = "http://127.0.0.1:8080/user";
-        if (type === "signup") requestParams.method = "POST";
-        else requestParams.method = "PUT";
-        const response = await fetch(requestParams.path, {
-            method: requestParams.method,
-            headers: {
-                "Content-Type": "application/json;charset=utf-8"
-            },
-            body: JSON.stringify({
+        const requestParams = {
+            path: "http://127.0.0.1:8080/user",
+            method: (type === "signup") ? "POST" : "PUT",
+            body: {
                 ...userData, userToken: userToken, birthday: formatDate
-            })
-        });
-        const responseJSON = await response.json();
+            },
+        };
+        const responseJSON = await APICall(requestParams);
         if (responseJSON["response-type"] === "Error") {
             setError(responseJSON.description);
             return;

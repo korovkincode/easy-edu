@@ -1,13 +1,18 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context";
 import { Box, Avatar, Typography, Grid, TextField, Button } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { APICall } from "../utils/API";
+import { useNavigate } from "react-router-dom";
 
-const CourseForm = () => {
-    const [postData, setPostData] = useState({name: "", subject: "", description: ""});
+const CourseForm = (props) => {
+    const [postData, setPostData] = useState({name: "", description: ""});
     const [postAddError, setPostAddError] = useState("");
+    const {userToken, setUserToken} = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    const createPost = (e) => {
+    const createPost = async e => {
         e.preventDefault();
         setPostAddError("");
         for (let field in postData) {
@@ -16,6 +21,20 @@ const CourseForm = () => {
 				return;
 			}
 		}
+        const requestParams = {
+            path: "http://127.0.0.1:8080/course",
+            method: "POST",
+            body: {
+                authorToken: userToken, ...postData
+            }
+        };
+        const responseJSON = await APICall(requestParams);
+        if (responseJSON["response-type"] === "Error") {
+            setPostAddError(responseJSON.description);
+            return;
+        }
+        props.onSuccess(0);
+        navigate(`/course/${responseJSON.data}`);
     }
 
     return (
@@ -38,10 +57,6 @@ const CourseForm = () => {
                     <Grid item xs={12} sx={{ mt: 3 }}>
                         <TextField required value={postData.name || ""} onChange={e => setPostData({...postData, name: e.target.value})}
                         fullWidth label="Course name" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField required value={postData.subject || ""} onChange={e => setPostData({...postData, subject: e.target.value})}
-                        fullWidth label="Course subject" />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField required value={postData.description || ""} onChange={e => setPostData({...postData, description: e.target.value})}

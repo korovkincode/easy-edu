@@ -38,7 +38,7 @@ const Navbar = () => {
         <>
             <Modal open={postAdd} onClose={() => setPostAdd(0)}>
                 <Box sx={ModalStyle}>
-                    <CourseForm />
+                    <CourseForm onSuccess={setPostAdd} />
                 </Box>
             </Modal>
             <AppBar sx={{ bgcolor: "#a8eb34", color: "black" }} position="static">
