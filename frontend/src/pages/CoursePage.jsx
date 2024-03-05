@@ -149,7 +149,7 @@ const CoursePage = () => {
                                                 <CardHeader
                                                     title={
                                                         <Typography sx={{ ml: -1 }}>
-                                                            {course.teacher} опубликовал <b>
+                                                            {course.teacher} posted <b>
                                                             {c.desc.slice(0, charSlice) + (c.desc.length <= charSlice ? "": "...")}
                                                             </b>
                                                         </Typography>

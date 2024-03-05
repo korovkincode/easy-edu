@@ -12,7 +12,7 @@ const UserForm = ({btnLabel, type}) => {
     const [userData, setUserData] = useState({
         name: null, surname: null, username: null, password: null, birthday: null
     });
-	const [error, setError] = useState("");
+	const [formStatus, setFormStatus] = useState({type: "", description: ""});
     const navigate = useNavigate();
     const {userToken, setUserToken} = useContext(AuthContext);
     let birthdayInput, formatDate;
@@ -33,10 +33,13 @@ const UserForm = ({btnLabel, type}) => {
 
     const regUser = async e => {
 		e.preventDefault();
-        setError("");
+        setFormStatus({type: "", description: ""});
 		for (let field in userData) {
 			if (userData[field] === null || userData[field] === "") {
-				setError("Fill in all the fields");
+				setFormStatus({
+                    type: "error",
+                    description: "Fill in all the fields"
+                });
 				return;
 			}
 		}
@@ -48,31 +51,37 @@ const UserForm = ({btnLabel, type}) => {
         }
         const requestParams = {
             path: "http://127.0.0.1:8080/user",
-            method: (type === "signup") ? "POST" : "PUT",
+            method: type === "signup" ? "POST" : "PUT",
             body: {
                 ...userData, userToken: userToken, birthday: formatDate
             },
         };
         const responseJSON = await APICall(requestParams);
         if (responseJSON["response-type"] === "Error") {
-            setError(responseJSON.description);
+            setFormStatus({
+                type: "error",
+                description: responseJSON.description
+            });
             return;
         }
+        setFormStatus({
+            type: "success",
+            description: responseJSON.description
+        })
 		localStorage.setItem("username", userData.username);
         if (type === "signup") {
             localStorage.setItem("userToken", responseJSON.data);
             setUserToken(responseJSON.data);
         }
-        if (type === "change") navigate(`/profile/${userData.username}`);
 	}
 
     return (
         <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2} alignItems="center">
-                {error !== "" &&
+                {formStatus.description !== "" &&
                     <Grid sx={{ mb: 2 }} item xs={12}>
-                        <Typography sx={{ fontWeight: "bold" }} color="error">
-                            {error}
+                        <Typography sx={{ fontWeight: "bold" }} color={`${formStatus.type}.main`}>
+                            {formStatus.description}
                         </Typography>
                     </Grid>
                 }

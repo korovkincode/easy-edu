@@ -8,11 +8,12 @@ import AddIcon from "@mui/icons-material/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
 import CourseForm from "../../CourseForm";
+import CourseJoin from "../../CourseJoin";
+import { Theme, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ModalStyle = {
     position: "absolute",
-    top: "50%",
-    left: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
@@ -23,7 +24,9 @@ const ModalStyle = {
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState({menu: null, add: null, profile: null});    
-    const [postAdd, setPostAdd] = useState(0);
+    const [courseJoin, setCourseJoin] = useState(0);
+    const [courseAdd, setCourseAdd] = useState(0);
+    const theme = useTheme();
     const location = useLocation();
     const {userToken, setUserToken} = useContext(AuthContext);
     const username = localStorage.getItem("username");
@@ -36,9 +39,28 @@ const Navbar = () => {
 
     return (
         <>
-            <Modal open={postAdd} onClose={() => setPostAdd(0)}>
-                <Box sx={ModalStyle}>
-                    <CourseForm onSuccess={setPostAdd} />
+            <Modal open={courseAdd} onClose={() => setCourseAdd(0)}>
+                <Box sx={{
+                    ...ModalStyle, top: "50%", left: "50%"
+                }}>
+                    <CourseForm onSuccess={setCourseAdd} />
+                </Box>
+            </Modal>
+            <Modal open={courseJoin} onClose={() => setCourseJoin(0)}>
+                <Box sx={{
+                    ...ModalStyle,
+                    ...(useMediaQuery(theme.breakpoints.down("md"))
+                        ? {
+                            top: "50%",
+                            left: "50%"
+                        }
+                        : {
+                            top: "200px",
+                            right: "-110px"
+                        }
+                    )
+                }}>
+                    <CourseJoin onSuccess={setCourseJoin} />
                 </Box>
             </Modal>
             <AppBar sx={{ bgcolor: "#a8eb34", color: "black" }} position="static">
@@ -93,10 +115,15 @@ const Navbar = () => {
                         open={Boolean(anchorEl.add)}
                         onClose={() => setAnchorEl({...anchorEl, add: null})}
                     >
-                        <MenuItem onClick={() => setAnchorEl({...anchorEl, add: null})}>Join a course</MenuItem>
                         <MenuItem onClick={() => {
                             setAnchorEl({...anchorEl, add: null});
-                            setPostAdd(1);
+                            setCourseJoin(1);
+                        }}>
+                            Join a course
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            setAnchorEl({...anchorEl, add: null});
+                            setCourseAdd(1);
                         }}>
                             Create
                         </MenuItem>
