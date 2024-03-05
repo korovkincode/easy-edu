@@ -3,13 +3,13 @@ sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
 from config.config import EasyEduDB
-from models.models import UserModel, UserCredentials
+from models.models import UserModel, UserCredentialsModel, UserCourseModel
 import uuid
 
 router = APIRouter()
 
 @router.post("/auth")
-async def authUser(userData: UserCredentials):
+async def authUser(userData: UserCredentialsModel):
     userData = userData.dict()
     findUser = EasyEduDB.Users.find_one({
         "username": userData["username"],
@@ -111,4 +111,44 @@ async def deleteUser(userToken: str):
         return {
             "response-type": "Error",
             "description": "Error occured during user deletion"
+        }
+
+@router.post("/join")
+async def joinCourse(joinData: UserCourseModel):
+    joinData = joinData.dict()
+    if EasyEduDB.Courses.find_one({"courseToken": joinData["courseToken"]}) is None:
+        return {
+            "response-type": "Error",
+            "description": "No such course"
+        }
+    userCourses = EasyEduDB.UsersToCourses.find_one({"userToken": joinData["userToken"]})
+    if userCourses is None:
+        userCourses = {"userToken": joinData["userToken"]}
+        userCoursesList = []
+    else:
+        userCoursesList = userCourses["courses"]
+    if len([course for course in userCoursesList if course["courseToken"] == joinData["courseToken"]]):
+        return {
+            "response-type": "Error",
+            "description": "User has already joined the course before"
+        }
+    userCoursesList.append({
+        "courseToken": joinData["courseToken"],
+        "role": "student"
+    })
+    userCourses["courses"] = userCoursesList
+    try:
+        EasyEduDB.UsersToCourses.replace_one(
+            {"userToken": joinData["userToken"]},
+            userCourses,
+            upsert=True
+        )
+        return {
+            "response-type": "Success",
+            "description": "Successfully joined the course"
+        }
+    except:
+        return {
+            "response-type": "Error",
+            "description": "Unexpected error"
         }

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class UserCredentials(BaseModel):
+class UserCredentialsModel(BaseModel):
     username: str
     password: str
 
@@ -12,6 +12,10 @@ class UserModel(BaseModel):
     name: str
     surname: str
     birthday: str
+
+class UserCourseModel(BaseModel):
+    userToken: str
+    courseToken: str
 
 class CourseModel(BaseModel):
     authorToken: str

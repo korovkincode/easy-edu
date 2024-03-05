@@ -23,11 +23,17 @@ async def createCourse(courseData: CourseModel):
         "role": "admin"
     })
     userCourses["courses"] = userCoursesList
-    EasyEduDB.UsersToCourses.replace_one(
-        {"userToken": courseData["authorToken"]},
-        userCourses,
-        upsert=True
-    )
+    try:
+        EasyEduDB.UsersToCourses.replace_one(
+            {"userToken": courseData["authorToken"]},
+            userCourses,
+            upsert=True
+        )
+    except:
+        return {
+            "response-type": "Error",
+            "description": "Unexpected error"
+        }
     try:
         EasyEduDB.Courses.insert_one(courseData)
         return {
