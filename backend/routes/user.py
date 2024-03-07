@@ -152,3 +152,20 @@ async def joinCourse(joinData: UserCourseModel):
             "response-type": "Error",
             "description": "Unexpected error"
         }
+
+@router.get("/{userToken}/courses")
+async def getCourses(userToken: str):
+    if EasyEduDB.Users.find_one({"userToken": userToken}) is None:
+        return {
+            "response-type": "Error",
+            "description": "No such user"
+        }
+    userCourses = EasyEduDB.UsersToCourses.find_one({"userToken": userToken})
+    if userCourses is None:
+        userCoursesList = []
+    else:
+        userCoursesList = userCourses["courses"]
+    return {
+        "response-type": "Success",
+        "data": userCoursesList
+    }

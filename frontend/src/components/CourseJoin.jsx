@@ -25,10 +25,10 @@ const CourseJoin = (props) => {
 			}
 		}
         const requestParams = {
-            path: "http://127.0.0.1:8080/course",
+            path: "http://127.0.0.1:8080/user/join",
             method: "POST",
             body: {
-                authorToken: userToken, ...courseData
+                userToken: userToken, courseToken: courseData.token
             }
         };
         const responseJSON = await APICall(requestParams);
@@ -40,7 +40,7 @@ const CourseJoin = (props) => {
             return;
         }
         props.onSuccess(0);
-        navigate(`/course/${responseJSON.data}`);
+        navigate(`/course/${courseData.token}`);
     }
 
     return (

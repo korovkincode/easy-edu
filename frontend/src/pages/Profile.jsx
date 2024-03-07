@@ -28,6 +28,7 @@ const Profile = () => {
                 {localStorage.getItem("username") === params.username && 
                     <UserForm btnLabel="Save Changes" type="change" />
                 }
+                {/*
                 <Typography component="h3" variant="h6" sx={{ mt: 3, alignSelf: "flex-start" }}>Subscribed to courses:</Typography>
                 <Grid sx={{ mt: 2, mb: 3 }} container spacing={2}>
                     {courses.map((c, index) =>
@@ -36,6 +37,7 @@ const Profile = () => {
                         </Grid>
                     )}
                 </Grid>
+                */}
                 <Typography variant="h6" sx={{ mt: 3, mb: 3, alignSelf: "flex-end" }}>Signed up: 06.09.2023</Typography>
             </Box>
         </Container>

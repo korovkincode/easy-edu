@@ -7,18 +7,20 @@ const CourseCard = ({card}) => {
         <Card variant="outlined">
             <CardContent>
                 <Typography sx={{ fontSize: 14 }} color="text.disabled" gutterBottom>
-                    {card.teacher}
+                    <LinkDOM to={`/profile/${card.author.username}`}>
+                        {`${card.author.name} ${card.author.surname}`}
+                    </LinkDOM>
                 </Typography>
                 <Typography color="text.primary" variant="h5">
-                    {card.name}
+                    {card.course.name}
                 </Typography>
                 <Typography color="text.secondary" variant="h7">
-                    {card.desc}
+                    {card.course.description}
                 </Typography>
             </CardContent>
             <CardActions>
                 <Button variant="contained" size="small">
-                    <LinkDOM to={`/course/${card.id}`}>Learn More</LinkDOM>
+                    <LinkDOM to={`/course/${card.course.courseToken}`}>Learn More</LinkDOM>
                 </Button>
             </CardActions>
         </Card>
