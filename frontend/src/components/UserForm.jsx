@@ -10,7 +10,8 @@ import { APICall } from "../utils/API";
 
 const UserForm = ({btnLabel, type}) => {
     const [userData, setUserData] = useState({
-        name: null, surname: null, username: null, password: null, birthday: null
+        name: null, surname: null, username: null,
+        password: null, previousPassword: null, birthday: null
     });
 	const [formStatus, setFormStatus] = useState({type: "", description: ""});
     const navigate = useNavigate();
@@ -35,6 +36,7 @@ const UserForm = ({btnLabel, type}) => {
 		e.preventDefault();
         setFormStatus({type: "", description: ""});
 		for (let field in userData) {
+            if (field === "previousPassword" && type === "signup") continue;
 			if (userData[field] === null || userData[field] === "") {
 				setFormStatus({
                     type: "error",
@@ -86,30 +88,48 @@ const UserForm = ({btnLabel, type}) => {
                     </Grid>
                 }
                 <Grid item xs={12} sm={6}>
-                    <TextField required value={userData.name || ""} onChange={e => setUserData({...userData, name: e.target.value})}
-                    fullWidth label="First Name" />
+                    <TextField
+                        required value={userData.name || ""}
+                        onChange={e => setUserData({...userData, name: e.target.value})}
+                        fullWidth label="First Name"
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField required value={userData.surname || ""} onChange={e => setUserData({...userData, surname: e.target.value})}
-                    fullWidth label="Last Name" />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField required value={userData.username || ""}
-                    onChange={e => setUserData({...userData, username: e.target.value})}
-                    fullWidth label="Login"
+                    <TextField
+                        required value={userData.surname || ""}
+                        onChange={e => setUserData({...userData, surname: e.target.value})}
+                        fullWidth label="Last Name"
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField required value={userData.password || ""}
-                    onChange={e => setUserData({...userData, password: e.target.value})}
-                    fullWidth label="Password" type="password"
+                    <TextField
+                        required value={userData.username || ""}
+                        onChange={e => setUserData({...userData, username: e.target.value})}
+                        fullWidth label="Login"
+                    />
+                </Grid>
+                {type === "change" &&
+                    <Grid item xs={12}>
+                        <TextField
+                            required value={userData.previousPassword || ""}
+                            onChange={e => setUserData({...userData, previousPassword: e.target.value})}
+                            fullWidth label="Previous password" type="password"
+                        />
+                    </Grid>
+                }
+                <Grid item xs={12}>
+                    <TextField
+                        required value={userData.password || ""}
+                        onChange={e => setUserData({...userData, password: e.target.value})}
+                        fullWidth label="Password" type="password"
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <LocalizationProvider fullWidth dateAdapter={AdapterDayjs}>
-                        <DatePicker required value={dayjs(userData.birthday)}
-                        onChange={e => setUserData({...userData, birthday: e})}
-                        slotProps={{textField: {fullWidth: true, required: true, error: false}}} label="Birthday" />
+                        <DatePicker
+                            required value={dayjs(userData.birthday)}
+                            onChange={e => setUserData({...userData, birthday: e})}
+                            slotProps={{textField: {fullWidth: true, required: true, error: false}}} label="Birthday" />
                     </LocalizationProvider>
                 </Grid>
             </Grid>

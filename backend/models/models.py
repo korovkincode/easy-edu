@@ -9,6 +9,7 @@ class UserModel(BaseModel):
     userToken: Optional[str] = None
     username: str
     password: str
+    previousPassword: Optional[str] = None
     name: str
     surname: str
     birthday: str

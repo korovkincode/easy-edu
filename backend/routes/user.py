@@ -34,6 +34,7 @@ async def createUser(userData: UserModel):
             "response-type": "Error",
             "description": "This username is already taken"
         }
+    del userData["previousPassword"]
     try:
         EasyEduDB.Users.insert_one(userData)
         return {
@@ -70,12 +71,23 @@ async def updateUser(userData: UserModel):
     if userData.get("userToken", None) is None:
         return {
             "response-type": "Error",
-            "description": "UserToken should be passed"
+            "description": "User token should be passed"
         }
-    if EasyEduDB.Users.find_one({"userToken": userData["userToken"]}) is None:
+    if userData.get("previousPassword", None) is None:
+        return {
+            "response-type": "Error",
+            "description": "Previous password should be passed"
+        }
+    findUser = EasyEduDB.Users.find_one({"userToken": userData["userToken"]})
+    if findUser is None:
         return {
             "response-type": "Error",
             "description": "User does not exist"
+        }
+    if findUser["password"] != userData["previousPassword"]:
+        return {
+            "response-type": "Error",
+            "description": "Previous password is not matching"
         }
     if EasyEduDB.Users.find_one({"userToken": {"$ne": userData["userToken"]}, "username": userData["username"]}) is not None:
         return {
@@ -83,6 +95,7 @@ async def updateUser(userData: UserModel):
             "description": "New username should be unique"
         }
     try:
+        del userData["previousPassword"]
         EasyEduDB.Users.replace_one({"userToken": userData["userToken"]}, userData)
         return {
             "response-type": "Success",
