@@ -96,6 +96,7 @@ async def updateUser(userData: UserModel):
         }
     try:
         del userData["previousPassword"]
+        userData["signedUp"] = findUser["signedUp"]
         EasyEduDB.Users.replace_one({"userToken": userData["userToken"]}, userData)
         return {
             "response-type": "Success",

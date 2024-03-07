@@ -7,8 +7,9 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useNavigate } from "react-router-dom";
 import { APICall } from "../utils/API";
+import { getTodayDate } from "../utils/date";
 
-const UserForm = ({btnLabel, type}) => {
+const UserForm = ({btnLabel, type, callback = () => {}}) => {
     const [userData, setUserData] = useState({
         name: null, surname: null, username: null,
         password: null, previousPassword: null, birthday: null
@@ -28,6 +29,7 @@ const UserForm = ({btnLabel, type}) => {
             birthdayInput = responseJSON.data.birthday.split(".");
             formatDate = `${birthdayInput[2]}-${birthdayInput[1]}-${birthdayInput[0]}`;
             setUserData({...responseJSON.data, password: "", birthday: formatDate});
+            callback(responseJSON.data.signedUp);
         }
         if (type === "change") getUserData();
     }, []);
@@ -55,7 +57,9 @@ const UserForm = ({btnLabel, type}) => {
             path: "http://127.0.0.1:8080/user",
             method: type === "signup" ? "POST" : "PUT",
             body: {
-                ...userData, userToken: userToken, birthday: formatDate
+                ...userData,
+                userToken: userToken, birthday: formatDate,
+                signedUp: type == "signup" ? getTodayDate() : null
             },
         };
         const responseJSON = await APICall(requestParams);

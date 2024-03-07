@@ -13,6 +13,7 @@ class UserModel(BaseModel):
     name: str
     surname: str
     birthday: str
+    signedUp: Optional[str] = None
 
 class UserCourseModel(BaseModel):
     userToken: str
