@@ -1,6 +1,9 @@
-import React, { useContext, useState } from "react";
+import React from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../../context";
-import { IconButton, Typography, AppBar, Toolbar, Menu, MenuItem, ListItemIcon, ListItemText, Modal, Box } from "@mui/material";
+import { IconButton, Typography, AppBar, Toolbar, Menu, MenuItem } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Modal, Box, Drawer, Avatar, CardHeader, Divider } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -11,6 +14,8 @@ import CourseForm from "../../CourseForm";
 import CourseJoin from "../../CourseJoin";
 import { Theme, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { GetUserCourses } from "../../../utils/API";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 
 const ModalStyle = {
     position: "absolute",
@@ -22,8 +27,11 @@ const ModalStyle = {
     p: 4,
 };
 
+
 const Navbar = () => {
-    const [anchorEl, setAnchorEl] = useState({menu: null, add: null, profile: null});    
+    const [anchorEl, setAnchorEl] = useState({menu: null, add: null, profile: null});
+    const [sideBar, setSideBar] = useState(0);
+    const [userCourses, setUserCourses] = useState([]);
     const [courseJoin, setCourseJoin] = useState(0);
     const [courseAdd, setCourseAdd] = useState(0);
     const theme = useTheme();
@@ -31,11 +39,59 @@ const Navbar = () => {
     const {userToken, setUserToken} = useContext(AuthContext);
     const username = localStorage.getItem("username");
 
+    useEffect(() => {
+        async function updateCourses() {
+            setUserCourses(await GetUserCourses(userToken));
+        }
+        if (userToken !== null && userToken !== "") updateCourses();
+    }, [userToken]);
+
     const logout = () => {
         setUserToken("");
         localStorage.removeItem("username");
         localStorage.removeItem("userToken");
     }
+
+    const DrawerMenu = (
+        <Box sx={{ width: 250 }} role="presentation">
+            <List>
+                <ListItem key="label" sx={{ display: "flex", justifyContent: "space-around" }}>
+                    <Typography variant="h5" sx={{ display: "flex", alignItems: "center" }}>
+                        <SchoolOutlinedIcon sx={{ ml: -1, mr: 2 }} />
+                        Your courses
+                    </Typography>
+                </ListItem>
+                <Divider />
+                {userCourses.map((courseItem, index) => (
+                    <ListItem key={courseItem.course.courseToken}>
+                        <Link to={`/course/${courseItem.course.courseToken}`}>
+                            <ListItemButton onClick={() => setSideBar(0)}>
+                                <ListItemIcon>
+                                    <Avatar sx={{ bgcolor: "primary.main" }}>
+                                        {courseItem.course.name[0]}
+                                    </Avatar>
+                                </ListItemIcon>
+                                <ListItemText>
+                                    <CardHeader
+                                        title={
+                                            <Typography sx={{ ml: -1, fontSize: 16 }}>
+                                                {courseItem.course.name}
+                                            </Typography>
+                                        }
+                                        subheader={
+                                            <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
+                                                {courseItem.author.name + " " + courseItem.author.surname}
+                                            </Typography>
+                                        }
+                                    />
+                                </ListItemText>
+                            </ListItemButton>
+                        </Link>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
 
     return (
         <>
@@ -63,17 +119,25 @@ const Navbar = () => {
                     <CourseJoin onSuccess={setCourseJoin} />
                 </Box>
             </Modal>
-            <AppBar sx={{ bgcolor: "#a8eb34", color: "black" }} position="static">
+            <Drawer open={sideBar && userToken} onClose={() => setSideBar(0)}>
+                {DrawerMenu}
+            </Drawer>
+            <AppBar sx={{ bgcolor: "white", color: "black" }} position="static">
                 <Toolbar>
                     <IconButton
                         size="large" edge="start"
-                        color="inherit" sx={{ mr: 2 }}
-                        onClick={e => setAnchorEl({...anchorEl, menu: e.currentTarget})}
-                    >
+                        color="inherit"
+                        onClick={e => {
+                            setAnchorEl({...anchorEl, menu: e.currentTarget});
+                            setSideBar(1);
+                    }}>
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        EasyEdu
+                    <Link to="/courses">
+                        <img src="/logo.png" width="76px" height="50px" />
+                    </Link>
+                    <Typography variant="h6" component="div" sx={{ ml: 1, flexGrow: 1 }}>
+                        <Link to="/courses" className="underline">Class</Link>
                     </Typography>
                     {location.pathname === "/courses" && 
                         <IconButton
@@ -91,19 +155,6 @@ const Navbar = () => {
                         <AccountCircle />
                     </IconButton>
                 </Toolbar>
-                <Menu
-                    anchorEl={anchorEl.menu}
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "left",
-                    }}
-                    keepMounted
-                    open={Boolean(anchorEl.menu)}
-                    onClose={() => setAnchorEl({...anchorEl, menu: null})}
-                >
-                    <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}><Link to="/courses">Courses</Link></MenuItem>
-                    <MenuItem onClick={() => setAnchorEl({...anchorEl, menu: null})}>About Us</MenuItem>
-                </Menu>
                 {location.pathname === "/courses" &&
                     <Menu
                         anchorEl={anchorEl.add}
@@ -137,8 +188,10 @@ const Navbar = () => {
                     }}
                     keepMounted
                     open={Boolean(anchorEl.profile)}
-                    onClose={() => setAnchorEl({...anchorEl, profile: null})}
-                >
+                    onClose={() => {
+                        setAnchorEl({...anchorEl, profile: null});
+                        setSideBar(0);
+                }}>
                     {userToken !== ""
                     ?   <>
                             <MenuItem onClick={() => setAnchorEl({...anchorEl, profile: null})}>
