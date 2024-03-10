@@ -1,19 +1,28 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Box, Typography, Avatar, Grid } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import UserForm from "../components/UserForm";
 import CourseCard from "../components/CourseCard";
+import { APICall, GetUserCourses } from "../utils/API";
 
 const Profile = () => {
     const [signedUp, setSignedUp] = useState("");
     const params = useParams();
-    const courses = [
-        {id: 1, name: "PE", teacher: "Sam Sulek", desc: "Daily: 3PM"},
-        {id: 2, name: "Physics", teacher: "Albert Einstein", desc: "Daily: 1PM"},
-        {id: 3, name: "Maths", teacher: "Euclid", desc: "Daily: 10AM"}
-    ]; //Make API Request
+    const [userCourses, setUserCourses] = useState([]);
+
+    useEffect(() => {
+        async function getUserCourses() {
+            const requestParams = {
+                path: `http://127.0.0.1:8080/user/${params.username}?idType=username`,
+                method: "GET",
+            };
+            const responseJSON = await APICall(requestParams);
+            setUserCourses(await GetUserCourses(responseJSON.data.userToken));
+        }
+        getUserCourses();
+    }, [params.username]);
 
     return (
         <Container maxWidth="sm">
@@ -30,16 +39,14 @@ const Profile = () => {
                 {localStorage.getItem("username") === params.username && 
                     <UserForm btnLabel="Save Changes" type="change" callback={setSignedUp} />
                 }
-                {/*
                 <Typography component="h3" variant="h6" sx={{ mt: 3, alignSelf: "flex-start" }}>Subscribed to courses:</Typography>
                 <Grid sx={{ mt: 2, mb: 3 }} container spacing={2}>
-                    {courses.map((c, index) =>
+                    {userCourses.map((c, index) =>
                         <Grid item xs={12} key={index}>
                             <CourseCard card={c} key={index} />
                         </Grid>
                     )}
                 </Grid>
-                */}
                 <Typography variant="h6" sx={{ mt: 3, mb: 3, alignSelf: "flex-end" }}>Signed up: {signedUp}</Typography>
             </Box>
         </Container>

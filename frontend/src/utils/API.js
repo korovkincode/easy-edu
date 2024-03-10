@@ -25,5 +25,6 @@ export const GetUserCourses = async userToken => {
         const responseJSON = await APICall(requestParams);
         userCourses.push(responseJSON.data);
     }
+    console.log(userCourses);
     return userCourses;
 }

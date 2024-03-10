@@ -22,7 +22,7 @@ const UserForm = ({btnLabel, type, callback = () => {}}) => {
     useEffect(() => {
         async function getUserData() {
             const requestParams = {
-                path: `http://127.0.0.1:8080/user/${userToken}`,
+                path: `http://127.0.0.1:8080/user/${userToken}?idType=token`,
                 method: "GET",
             };
             const responseJSON = await APICall(requestParams);
@@ -59,7 +59,7 @@ const UserForm = ({btnLabel, type, callback = () => {}}) => {
             body: {
                 ...userData,
                 userToken: userToken, birthday: formatDate,
-                signedUp: type == "signup" ? getTodayDate() : null
+                signedUp: type === "signup" ? getTodayDate() : null
             },
         };
         const responseJSON = await APICall(requestParams);

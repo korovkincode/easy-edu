@@ -48,22 +48,44 @@ async def createUser(userData: UserModel):
             "description": "Error occured during user creation"
         }
         
-@router.get("/{userToken}")
-async def readUser(userToken: str):
+@router.get("/{userID}")
+async def readUser(userID: str, idType: str):
+    if idType not in ["token", "username"]:
+        return {
+            "response-type": "Error",
+            "description": "Please pass correct idType parameter (token or username)"
+        }
+    if idType == "token":
+        return await readUserByToken(userID)
+    return await readUserByUsername(userID)
+
+
+async def readUserByToken(userToken: str):
     userData = EasyEduDB.Users.find_one(
         {"userToken": userToken},
         {"_id": 0, "password": 0}
     )
-    if userData is not None:
-        return {
-            "response-type": "Success",
-            "data": userData
-        }
-    else:
+    if userData is None:
         return {
             "response-type": "Error",
             "description": "No such user"
         }
+    return {
+        "response-type": "Success",
+        "data": userData
+    }
+
+async def readUserByUsername(username: str):
+    userData = EasyEduDB.Users.find_one({"username": username}, {"_id": 0, "password": 0})
+    if userData is None:
+        return {
+            "response-type": "Error",
+            "description": "No such user"
+        }
+    return {
+        "response-type": "Success",
+        "data": userData
+    }
 
 @router.put("/")
 async def updateUser(userData: UserModel):

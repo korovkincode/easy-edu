@@ -34,7 +34,6 @@ const CoursePage = () => {
                 method: "GET",
             };
             const responseJSON = await APICall(requestParams);
-            console.log(responseJSON);
             setCourseData({
                 ...courseData,
                 name: responseJSON.data.course.name,
@@ -71,8 +70,7 @@ const CoursePage = () => {
     else if (smallToMid) charSlice = 40;
     else if (lessThanSmall) charSlice = 15;
 
-    console.log(allComments, content);
-
+    
     return (
         <Container disableGutters maxWidth="lg">
 			<Box sx={{		
