@@ -1,5 +1,6 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../context";
 import { useParams } from "react-router-dom";
 import { Container, Box, Typography, Card, CardHeader, CardContent, Grid, TextField, InputAdornment, IconButton, Avatar } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -9,23 +10,55 @@ import { Link as LinkDOM } from "react-router-dom";
 import { getTodayDate } from "../utils/date";
 import { Theme, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { APICall } from "../utils/API";
 
 const CoursePage = () => {
+    const {userToken, setUserToken} = useContext(AuthContext);
     const params = useParams();
     const [comment, setComment] = useState("");
     const [allComments, setAllComments] = useState([]);
 
-    const course = {id: params.cid, name: "11A: PE", teacher: "Sam Sulek", desc: "Daily 3PM"}; //Make API Request
+    const [courseData, setCourseData] = useState({id: params.cid, name: "", description: "", author: {}});
     const content = [
-        {ttype: "Announcement", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
-        {ttype: "Task", id: 1, desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
-        {ttype: "Announcement", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
-        {ttype: "Announcement", desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
-        {ttype: "Task", id: 2, desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2023"}
+        {type: "Announcement", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
+        {type: "Task", id: 1, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
+        {type: "Announcement", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
+        {type: "Announcement", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2024"},
+        {type: "Task", id: 2, description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit", date: "Feb 24 2023"}
     ];
 
+    useEffect(() => {
+        async function getCourseData() {
+            const requestParams = {
+                path: `http://127.0.0.1:8080/course/${params.cid}`,
+                method: "GET",
+            };
+            const responseJSON = await APICall(requestParams);
+            console.log(responseJSON);
+            setCourseData({
+                ...courseData,
+                name: responseJSON.data.course.name,
+                description: responseJSON.data.course.description,
+                author: {
+                    name: responseJSON.data.author.name + " " + responseJSON.data.author.surname,
+                    username: responseJSON.data.author.username
+                }
+            });
+        }
+        getCourseData();
+        setComment("");
+        setAllComments([]);
+    }, [params.cid]);
+
     const addComment = () => {
-        setAllComments([...allComments, {name: localStorage.getItem("username"), comm: comment, date: getTodayDate()}]);
+        setAllComments([
+            ...allComments,
+            {
+                username: localStorage.getItem("username"), 
+                comment: comment,
+                date: getTodayDate()
+            }
+        ]);
         setComment("");
     }
 
@@ -38,6 +71,8 @@ const CoursePage = () => {
     else if (smallToMid) charSlice = 40;
     else if (lessThanSmall) charSlice = 15;
 
+    console.log(allComments, content);
+
     return (
         <Container disableGutters maxWidth="lg">
 			<Box sx={{		
@@ -48,8 +83,12 @@ const CoursePage = () => {
                 <div className="course__wrap">
                     <div className="course__bg">
                         <div className="course__text">
-                            <div className="course__name">{course.name}</div>
-                            <div className="course__teacher">{course.teacher}</div>
+                            <div className="course__name">{courseData.name}</div>
+                            <div className="course__teacher">
+                                <LinkDOM to={`/profile/${courseData.author.username}`}>
+                                    {courseData.author.name}
+                                </LinkDOM>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,7 +137,13 @@ const CoursePage = () => {
                                 {allComments.map(c => 
                                     <Card sx={{ mb: 1.5, border: "1px solid #A8A8A8" }}>
                                         <CardHeader 
-                                            title={<Typography sx={{ ml: -1, fontSize: 16 }}>{c.name}</Typography>}
+                                            title={
+                                                <Typography sx={{ ml: -1, fontSize: 16 }}>
+                                                    <LinkDOM to={`/profile/${c.username}`}>
+                                                        {c.username}
+                                                    </LinkDOM>
+                                                </Typography>
+                                            }
                                             subheader={
                                                 <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
                                                     {c.date.split(" ")[2] == new Date().getFullYear()
@@ -110,7 +155,7 @@ const CoursePage = () => {
                                         />
                                         <CardContent sx={{ mt: -2 }}>
                                             <Typography color="text.primary">
-                                                {c.comm}
+                                                {c.comment}
                                             </Typography>
                                         </CardContent>
                                     </Card>
@@ -123,11 +168,15 @@ const CoursePage = () => {
                                 ?
                                 <Grid item xs={12}>
                                     {content.map(c =>
-                                        c.ttype === "Announcement"
+                                        c.type === "Announcement"
                                         ?
                                             <Card sx={{ mb: 1.5, border: "1px solid #A8A8A8" }}>
                                                 <CardHeader 
-                                                    title={<Typography sx={{ ml: -1, fontSize: 16 }}>{course.teacher}</Typography>}
+                                                    title={
+                                                        <Typography sx={{ ml: -1, fontSize: 16 }}>
+                                                            {courseData.author.name}
+                                                        </Typography>
+                                                    }
                                                     subheader={
                                                         <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
                                                             {c.date.split(" ")[2] == new Date().getFullYear()
@@ -139,7 +188,7 @@ const CoursePage = () => {
                                                 />
                                                 <CardContent sx={{ mt: -2 }}>
                                                     <Typography color="text.primary">
-                                                        {c.desc}
+                                                        {c.description}
                                                     </Typography>
                                                 </CardContent>
                                             </Card>
@@ -149,8 +198,8 @@ const CoursePage = () => {
                                                 <CardHeader
                                                     title={
                                                         <Typography sx={{ ml: -1 }}>
-                                                            {course.teacher} posted <b>
-                                                            {c.desc.slice(0, charSlice) + (c.desc.length <= charSlice ? "": "...")}
+                                                            {courseData.author.name} posted <b>
+                                                            {c.description.slice(0, charSlice) + (c.description.length <= charSlice ? "": "...")}
                                                             </b>
                                                         </Typography>
                                                     }
@@ -176,7 +225,6 @@ const CoursePage = () => {
                                     It is empty here yet
                                 </Typography>
                             }
-                            
                         </Grid>
                     </Grid>
                 </Grid>
