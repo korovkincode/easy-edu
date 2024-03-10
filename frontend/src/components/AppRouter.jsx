@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context";
 
 const AppRouter = () => {
-    const {userToken, setUserToken} = useContext(AuthContext);
+    const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
 
     return (
         <Routes>

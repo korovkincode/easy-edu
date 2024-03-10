@@ -16,7 +16,7 @@ const UserForm = ({btnLabel, type, callback = () => {}}) => {
     });
 	const [formStatus, setFormStatus] = useState({type: "", description: ""});
     const navigate = useNavigate();
-    const {userToken, setUserToken} = useContext(AuthContext);
+    const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     let birthdayInput, formatDate;
 
     useEffect(() => {
@@ -58,7 +58,9 @@ const UserForm = ({btnLabel, type, callback = () => {}}) => {
             method: type === "signup" ? "POST" : "PUT",
             body: {
                 ...userData,
-                userToken: userToken, birthday: formatDate,
+                userToken: userToken,
+                secretToken: secretToken,
+                birthday: formatDate,
                 signedUp: type === "signup" ? getTodayDate() : null
             },
         };
@@ -76,8 +78,10 @@ const UserForm = ({btnLabel, type, callback = () => {}}) => {
         })
 		localStorage.setItem("username", userData.username);
         if (type === "signup") {
-            localStorage.setItem("userToken", responseJSON.data);
-            setUserToken(responseJSON.data);
+            localStorage.setItem("userToken", responseJSON.data.userToken);
+            localStorage.setItem("secretToken", responseJSON.data.secretToken);
+            setUserToken(responseJSON.data.userToken);
+            setSecretToken(responseJSON.data.secretToken);
         }
 	}
 

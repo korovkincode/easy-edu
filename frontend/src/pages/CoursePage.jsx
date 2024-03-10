@@ -13,7 +13,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { APICall } from "../utils/API";
 
 const CoursePage = () => {
-    const {userToken, setUserToken} = useContext(AuthContext);
+    const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     const params = useParams();
     const [comment, setComment] = useState("");
     const [allComments, setAllComments] = useState([]);

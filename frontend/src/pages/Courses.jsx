@@ -8,7 +8,7 @@ import { GetUserCourses } from "../utils/API";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Courses = () => {
-    const {userToken, setUserToken} = useContext(AuthContext);
+    const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     const [coursesAll, setCoursesAll] = useState([]);
     const [isLoading, setIsLoading] = useState(0);
     const [page, setPage] = useState(1);

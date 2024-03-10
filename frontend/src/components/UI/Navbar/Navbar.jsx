@@ -36,7 +36,7 @@ const Navbar = () => {
     const [courseAdd, setCourseAdd] = useState(0);
     const theme = useTheme();
     const location = useLocation();
-    const {userToken, setUserToken} = useContext(AuthContext);
+    const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     const username = localStorage.getItem("username");
 
     useEffect(() => {
@@ -48,8 +48,10 @@ const Navbar = () => {
 
     const logout = () => {
         setUserToken("");
+        setSecretToken("");
         localStorage.removeItem("username");
         localStorage.removeItem("userToken");
+        localStorage.removeItem("secretToken");
     }
 
     const DrawerMenu = (

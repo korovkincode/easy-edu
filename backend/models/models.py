@@ -7,6 +7,7 @@ class UserCredentialsModel(BaseModel):
 
 class UserModel(BaseModel):
     userToken: Optional[str] = None
+    secretToken: Optional[str] = None
     username: str
     password: str
     previousPassword: Optional[str] = None

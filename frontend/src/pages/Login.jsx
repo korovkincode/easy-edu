@@ -8,7 +8,7 @@ import { Link as LinkDOM } from "react-router-dom";
 const Login = () => {
     const [userData, setUserData] = useState({username: null, password: null});
 	const [error, setError] = useState("");
-	const {userToken, setUserToken} = useContext(AuthContext);
+	const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
 
     const logUser = async e => {
         e.preventDefault();
@@ -32,9 +32,11 @@ const Login = () => {
             setError(responseJSON.description);
             return;
         }
-        setUserToken(responseJSON.data);
 		localStorage.setItem("username", userData.username);
-		localStorage.setItem("userToken", responseJSON.data);
+		localStorage.setItem("userToken", responseJSON.data.userToken);
+		localStorage.setItem("secretToken", responseJSON.data.secretToken);
+		setUserToken(responseJSON.data.userToken);
+		setSecretToken(responseJSON.data.secretToken)
     }
 
     return (

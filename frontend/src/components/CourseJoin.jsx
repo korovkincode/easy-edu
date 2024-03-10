@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const CourseJoin = (props) => {
     const [courseData, setCourseData] = useState({token: ""});
     const [formStatus, setFormStatus] = useState({type: "", description: ""});
-    const {userToken, setUserToken} = useContext(AuthContext);
+    const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     const navigate = useNavigate();
 
     const joinCourse = async e => {

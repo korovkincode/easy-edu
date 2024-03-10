@@ -11,24 +11,28 @@ router = APIRouter()
 @router.post("/auth")
 async def authUser(userData: UserCredentialsModel):
     userData = userData.dict()
-    findUser = EasyEduDB.Users.find_one({
+    userData = EasyEduDB.Users.find_one({
         "username": userData["username"],
         "password": userData["password"]
     })
-    if findUser is None:
+    if userData is None:
         return {
             "response-type": "Error",
             "description": "No such user"
         }
     return {
         "response-type": "Success",
-        "data": findUser["userToken"]
+        "data": {
+            "userToken": userData["userToken"],
+            "secretToken": userData["secretToken"]
+        }
     }
 
 @router.post("/")
 async def createUser(userData: UserModel):
     userData = userData.dict()
     userData["userToken"] = uuid.uuid4().hex
+    userData["secretToken"] = uuid.uuid4().hex
     if EasyEduDB.Users.find_one({"username": userData["username"]}) is not None:
         return {
             "response-type": "Error",
@@ -39,7 +43,10 @@ async def createUser(userData: UserModel):
         EasyEduDB.Users.insert_one(userData)
         return {
             "response-type": "Success",
-            "data": userData["userToken"],
+            "data": {
+                "userToken": userData["userToken"],
+                "secretToken": userData["secretToken"]
+            },
             "description": "User has been successfully created"
         }
     except:
@@ -63,7 +70,7 @@ async def readUser(userID: str, idType: str):
 async def readUserByToken(userToken: str):
     userData = EasyEduDB.Users.find_one(
         {"userToken": userToken},
-        {"_id": 0, "password": 0}
+        {"_id": 0, "secretToken": 0, "password": 0}
     )
     if userData is None:
         return {
@@ -76,7 +83,10 @@ async def readUserByToken(userToken: str):
     }
 
 async def readUserByUsername(username: str):
-    userData = EasyEduDB.Users.find_one({"username": username}, {"_id": 0, "password": 0})
+    userData = EasyEduDB.Users.find_one(
+        {"username": username},
+        {"_id": 0, "secretToken": 0, "password": 0}
+    )
     if userData is None:
         return {
             "response-type": "Error",
@@ -95,6 +105,11 @@ async def updateUser(userData: UserModel):
             "response-type": "Error",
             "description": "User token should be passed"
         }
+    if userData.get("secretToken", None) is None:
+        return {
+            "response-type": "Error",
+            "description": "Secret token should be passed"
+        }
     if userData.get("previousPassword", None) is None:
         return {
             "response-type": "Error",
@@ -105,6 +120,11 @@ async def updateUser(userData: UserModel):
         return {
             "response-type": "Error",
             "description": "User does not exist"
+        }
+    if findUser["secretToken"] != userData["secretToken"]:
+        return {
+            "response-type": "Error",
+            "description": "Secret token is not matching"
         }
     if findUser["password"] != userData["previousPassword"]:
         return {
