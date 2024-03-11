@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { AuthContext } from "../context";
+import { AuthContext, CourseCountContext } from "../context";
 import { Box, Avatar, Typography, Grid, TextField, Button } from "@mui/material";
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAlt';
 import { APICall } from "../utils/API";
@@ -10,6 +10,7 @@ const CourseJoin = (props) => {
     const [courseData, setCourseData] = useState({token: ""});
     const [formStatus, setFormStatus] = useState({type: "", description: ""});
     const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
+    const [courseCount, setCourseCount] = useContext(CourseCountContext);
     const navigate = useNavigate();
 
     const joinCourse = async e => {
@@ -39,6 +40,7 @@ const CourseJoin = (props) => {
             });
             return;
         }
+        setCourseCount(courseCount + 1);
         props.onSuccess(0);
         navigate(`/course/${courseData.token}`);
     }

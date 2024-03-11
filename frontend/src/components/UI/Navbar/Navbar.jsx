@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../../context";
+import { AuthContext, CourseCountContext } from "../../../context";
 import { IconButton, Typography, AppBar, Toolbar, Menu, MenuItem } from "@mui/material";
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { Modal, Box, Drawer, Avatar, CardHeader, Divider } from "@mui/material";
@@ -37,14 +37,16 @@ const Navbar = () => {
     const theme = useTheme();
     const location = useLocation();
     const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
+    const [courseCount, setCourseCount] = useContext(CourseCountContext);
     const username = localStorage.getItem("username");
 
     useEffect(() => {
         async function updateCourses() {
             setUserCourses(await GetUserCourses(userToken));
+            setCourseCount(userCourses.length);
         }
         if (userToken !== null && userToken !== "") updateCourses();
-    }, [userToken]);
+    }, [userToken, courseCount]);
 
     const logout = () => {
         setUserToken("");

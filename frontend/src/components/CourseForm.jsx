@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { AuthContext } from "../context";
+import { AuthContext, CourseCountContext } from "../context";
 import { Box, Avatar, Typography, Grid, TextField, Button } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { APICall } from "../utils/API";
@@ -10,6 +10,7 @@ const CourseForm = (props) => {
     const [courseData, setCourseData] = useState({name: "", description: ""});
     const [formStatus, setFormStatus] = useState({type: "", description: ""});
     const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
+    const [courseCount, setCourseCount] = useContext(CourseCountContext);
     const navigate = useNavigate();
 
     const createCourse = async e => {
@@ -39,6 +40,7 @@ const CourseForm = (props) => {
             });
             return;
         }
+        setCourseCount(courseCount + 1);
         props.onSuccess(0);
         navigate(`/course/${responseJSON.data}`);
     }
