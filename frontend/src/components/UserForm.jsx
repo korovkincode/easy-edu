@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { APICall } from "../utils/API";
 import { getTodayDate } from "../utils/date";
 
-const UserForm = ({btnLabel, type, callback = () => {}}) => {
+const UserForm = ({btnLabel, type}) => {
     const [userData, setUserData] = useState({
         name: null, surname: null, username: null,
         password: null, previousPassword: null, birthday: null
@@ -29,7 +29,6 @@ const UserForm = ({btnLabel, type, callback = () => {}}) => {
             birthdayInput = responseJSON.data.birthday.split(".");
             formatDate = `${birthdayInput[2]}-${birthdayInput[1]}-${birthdayInput[0]}`;
             setUserData({...responseJSON.data, password: "", birthday: formatDate});
-            callback(responseJSON.data.signedUp);
         }
         if (type === "change") getUserData();
     }, []);

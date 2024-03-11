@@ -19,6 +19,7 @@ const Profile = () => {
                 method: "GET",
             };
             const responseJSON = await APICall(requestParams);
+            setSignedUp(responseJSON.data.signedUp);
             setUserCourses(await GetUserCourses(responseJSON.data.userToken));
         }
         getUserCourses();
@@ -37,7 +38,7 @@ const Profile = () => {
 				</Avatar>
                 <Typography component="h1" variant="h5" sx={{ fontWeight: "bold" }}>{params.username}</Typography>
                 {localStorage.getItem("username") === params.username && 
-                    <UserForm btnLabel="Save Changes" type="change" callback={setSignedUp} />
+                    <UserForm btnLabel="Save Changes" type="change" />
                 }
                 <Typography component="h3" variant="h6" sx={{ mt: 3, alignSelf: "flex-start" }}>Subscribed to courses:</Typography>
                 <Grid sx={{ mt: 2, mb: 3 }} container spacing={2}>
