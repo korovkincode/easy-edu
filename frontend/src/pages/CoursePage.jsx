@@ -44,9 +44,26 @@ const CoursePage = () => {
                 }
             });
         }
+        async function getCourseCommentsData() {
+            const requestParams = {
+                path: `http://127.0.0.1:8080/course/${params.cid}/comments`,
+                method: "GET",
+            };
+            const responseJSON = await APICall(requestParams);
+            const fetchedComments = responseJSON.data.comments;
+            for (let i = 0; i < fetchedComments.length; i++) {
+                const requestParams = {
+                    path: `http://127.0.0.1:8080/user/${fetchedComments[i].authorToken}?idType=token`,
+                    method: "GET",
+                };
+                const responseJSON = await APICall(requestParams);
+                fetchedComments[i].username = responseJSON.data.username;
+            }
+            setAllComments(fetchedComments);
+        }
         getCourseData();
+        getCourseCommentsData();
         setComment("");
-        setAllComments([]);
     }, [params.cid]);
 
     const addComment = () => {
@@ -144,9 +161,9 @@ const CoursePage = () => {
                                             }
                                             subheader={
                                                 <Typography sx={{ ml: -1, fontSize: 14 }} color="text.secondary">
-                                                    {c.date.split(" ")[2] == new Date().getFullYear()
-                                                    ? c.date.replace(new Date().getFullYear().toString(), "")
-                                                    : c.date}
+                                                    {c.creationDate.split(" ")[2] == new Date().getFullYear()
+                                                    ? c.creationDate.replace(new Date().getFullYear().toString(), "")
+                                                    : c.creationDate}
                                                 </Typography>
                                             }
                                             avatar={<AccountCircle sx={{ fontSize: "45px", verticalAlign: "middle" }} />}

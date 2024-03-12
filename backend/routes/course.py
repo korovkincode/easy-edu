@@ -91,7 +91,8 @@ async def createComment(courseToken: str, commentData: CourseCommentModel):
         courseCommentsList = courseComments["comments"]
     courseCommentsList.append({
         "authorToken": commentData["userToken"],
-        "comment": commentData["comment"]
+        "comment": commentData["comment"],
+        "creationDate": commentData["creationDate"]
     })
     courseComments["comments"] = courseCommentsList
     try:
