@@ -2,7 +2,7 @@ import sys
 sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
-from models.models import CourseModel
+from models.models import CourseModel, CourseCommentModel
 from config.config import EasyEduDB
 import uuid
 
@@ -69,3 +69,62 @@ async def getCourse(courseToken):
             "author": userData
         }
     }
+
+@router.post("/{courseToken}/comment")
+async def createComment(courseToken: str, commentData: CourseCommentModel):
+    commentData = commentData.dict()
+    if EasyEduDB.Courses.find_one({"courseToken": courseToken}) is None:
+        return {
+            "response-type": "Error",
+            "description": "No such course"
+        }
+    if EasyEduDB.Users.find_one({"userToken": commentData["userToken"], "secretToken": commentData["secretToken"]}) is None:
+        return {
+            "response-type": "Error",
+            "description": "No such user"
+        }
+    courseComments = EasyEduDB.CourseComments.find_one({"courseToken": courseToken})
+    if courseComments is None:
+        courseComments = {"courseToken": courseToken}
+        courseCommentsList = []
+    else:
+        courseCommentsList = courseComments["comments"]
+    courseCommentsList.append({
+        "authorToken": commentData["userToken"],
+        "comment": commentData["comment"]
+    })
+    courseComments["comments"] = courseCommentsList
+    try:
+        EasyEduDB.CourseComments.replace_one(
+            {"courseToken": courseToken},
+            courseComments,
+            upsert=True
+        )
+        return {
+            "response-type": "Success",
+            "description": "Comment has been successfully created"
+        }
+    except:
+        return {
+            "response-type": "Error",
+            "description": "Error occured during comment creation"
+        }
+
+@router.get("/{courseToken}/comments")
+async def readComments(courseToken: str):
+    if EasyEduDB.Courses.find_one({"courseToken": courseToken}) is None:
+        return {
+            "response-type": "Error",
+            "description": "No such course"
+        }
+    courseComments = EasyEduDB.CourseComments.find_one({"courseToken": courseToken}, {"_id": 0})
+    if courseComments is None:
+        courseComments = {
+            "courseToken": courseToken,
+            "comments": []
+        }
+    return {
+        "response-type": "Success",
+        "data": courseComments
+    }
+    

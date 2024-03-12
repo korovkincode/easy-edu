@@ -24,3 +24,9 @@ class CourseModel(BaseModel):
     authorToken: str
     name: str
     description: str
+
+class CourseCommentModel(BaseModel):
+    userToken: str
+    secretToken: str
+    comment: str
+    creationDate: str

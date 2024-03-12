@@ -69,7 +69,7 @@ const CoursePage = () => {
     if (greaterThanMid) charSlice = 80;
     else if (smallToMid) charSlice = 40;
     else if (lessThanSmall) charSlice = 15;
-
+    
     
     return (
         <Container disableGutters maxWidth="lg">
