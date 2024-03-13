@@ -39,6 +39,7 @@ const CoursePage = () => {
                 ...courseData,
                 name: responseJSON.data.course.name,
                 description: responseJSON.data.course.description,
+                announcement: responseJSON.data.course.announcement || "",
                 author: {
                     name: responseJSON.data.author.name + " " + responseJSON.data.author.surname,
                     username: responseJSON.data.author.username
@@ -139,8 +140,8 @@ const CoursePage = () => {
                                 <Typography variant="h6" color="text.secondary">
                                     Announcements
                                 </Typography>
-                                <Typography sx={{ mt: 2 }} color="text.primary">
-                                    No current announcements
+                                <Typography sx={{ mt: 2, fontWeight: "bold" }} color="text.primary">
+                                    {courseData.announcement === "" ? "No current announcements" : courseData.announcement}
                                 </Typography>
                             </CardContent>
                         </Card>

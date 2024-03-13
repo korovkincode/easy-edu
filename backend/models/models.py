@@ -30,3 +30,8 @@ class CourseCommentModel(BaseModel):
     secretToken: str
     comment: str
     creationDate: str
+
+class CourseAnnouncementModel(BaseModel):
+    authorToken: str
+    secretToken: str
+    announcement: str

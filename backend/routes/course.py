@@ -2,7 +2,7 @@ import sys
 sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
-from models.models import CourseModel, CourseCommentModel
+from models.models import CourseModel, CourseCommentModel, CourseAnnouncementModel
 from config.config import EasyEduDB
 import uuid
 
@@ -128,4 +128,39 @@ async def readComments(courseToken: str):
         "response-type": "Success",
         "data": courseComments
     }
-    
+
+@router.put("/{courseToken}/annoucement")
+async def updateAnnouncement(courseToken: str, announcementData: CourseAnnouncementModel):
+    announcementData = announcementData.dict()
+    courseData = EasyEduDB.Courses.find_one({"courseToken": courseToken})
+    if courseData is None:
+        return {
+            "response-type": "Error",
+            "description": "No such course"
+        }
+    if courseData["authorToken"] != announcementData["authorToken"]:
+        return {
+            "response-type": "Error",
+            "description": "User has no rights for this action"
+        }
+    if EasyEduDB.Users.find_one({"userToken": announcementData["authorToken"]})["secretToken"] != announcementData["secretToken"]:
+        return {
+            "response-type": "Error",
+            "description": "Secret token is not matching"
+        }
+    courseData["announcement"] = announcementData["announcement"]
+    try:
+        EasyEduDB.Courses.replace_one(
+            {"courseToken": courseToken},
+            courseData,
+            upsert=True
+        )
+        return {
+            "response-type": "Success",
+            "description": "Announcement has been successfully updated"
+        }
+    except:
+        return {
+            "response-type": "Error",
+            "description": "Error occured during annoucement update"
+        }
