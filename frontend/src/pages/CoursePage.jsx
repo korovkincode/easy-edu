@@ -16,6 +16,7 @@ const CoursePage = () => {
     const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     const params = useParams();
     const [comment, setComment] = useState("");
+    const [commentStatus, setCommentStatus] = useState({type: "", description: ""});
     const [allComments, setAllComments] = useState([]);
 
     const [courseData, setCourseData] = useState({id: params.cid, name: "", description: "", author: {}});
@@ -66,16 +67,40 @@ const CoursePage = () => {
         setComment("");
     }, [params.cid]);
 
-    const addComment = () => {
-        setAllComments([
-            ...allComments,
-            {
-                username: localStorage.getItem("username"), 
-                comment: comment,
-                date: getTodayDate()
-            }
-        ]);
-        setComment("");
+    const addComment = async () => {
+        if (comment.replaceAll(" ", "").length === 0) {
+            setCommentStatus({
+                type: "error",
+                description: "Comment text cannot be empty"
+            });
+            return;
+        }
+        const newComment = {
+            userToken: userToken,
+            secretToken: secretToken,
+            comment: comment,
+            creationDate: getTodayDate()
+        };
+        const requestParams = {
+            path: `http://127.0.0.1:8080/course/${params.cid}/comment`,
+            method: "POST",
+            body: newComment
+        };
+        const responseJSON = await APICall(requestParams);
+        if (responseJSON["response-type"] === "Success") {
+            setAllComments([
+                ...allComments,
+                {
+                    ...newComment,
+                    username: localStorage.getItem("username")
+                }
+            ]);
+            setComment("");
+        }
+        setCommentStatus({
+            type: responseJSON["response-type"].toLowerCase(),
+            description: responseJSON.description
+        });
     }
 
     const theme = useTheme();
@@ -122,6 +147,13 @@ const CoursePage = () => {
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <Grid container spacing={2}>
+                            {commentStatus.description !== "" &&
+                                <Grid item xs={12}>
+                                    <Typography sx={{ fontWeight: "bold" }} color={`${commentStatus.type}.main`}>
+                                        {commentStatus.description}
+                                    </Typography>
+                                </Grid>
+                            }
                             <Grid item xs={12}>
                                 <Card variant="outlined">
                                     <TextField value={comment} onChange={e => setComment(e.target.value)} 
