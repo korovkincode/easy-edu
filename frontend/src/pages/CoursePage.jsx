@@ -1,8 +1,8 @@
 import React from "react";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../context";
 import { useParams } from "react-router-dom";
-import { Container, Box, Typography, Card, CardHeader, CardContent, Grid, TextField, InputAdornment, IconButton, Avatar } from "@mui/material";
+import { Container, Box, Typography, Card, CardHeader, CardContent, Grid, TextField, InputAdornment, IconButton, Avatar, Button } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import SendIcon from "@mui/icons-material/Send";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -11,13 +11,27 @@ import { getTodayDate } from "../utils/date";
 import { Theme, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { APICall } from "../utils/API";
+import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
 
 const CoursePage = () => {
     const [[userToken, setUserToken], [secretToken, setSecretToken]] = useContext(AuthContext);
     const params = useParams();
+    const [announcementEditable, setAnnouncementEditable] = useState(0);
+    const [announcement, setAnnouncement] = useState("");
+    const [announcementProps, setAnnouncementProps] = useState({label: "New announcement", color: ""})
     const [comment, setComment] = useState("");
     const [commentStatus, setCommentStatus] = useState({type: "", description: ""});
     const [allComments, setAllComments] = useState([]);
+
+    const theme = useTheme();
+    let charSlice;
+    const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
+    const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
+    const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
+    if (greaterThanMid) charSlice = 80;
+    else if (smallToMid) charSlice = 40;
+    else if (lessThanSmall) charSlice = 15;
 
     const [courseData, setCourseData] = useState({id: params.cid, name: "", description: "", author: {}});
     const content = [
@@ -42,9 +56,11 @@ const CoursePage = () => {
                 announcement: responseJSON.data.course.announcement || "",
                 author: {
                     name: responseJSON.data.author.name + " " + responseJSON.data.author.surname,
-                    username: responseJSON.data.author.username
+                    username: responseJSON.data.author.username,
+                    userToken: responseJSON.data.author.userToken
                 }
             });
+            setAnnouncement(responseJSON.data.course.announcement || "");
         }
         async function getCourseCommentsData() {
             const requestParams = {
@@ -104,16 +120,85 @@ const CoursePage = () => {
         });
     }
 
-    const theme = useTheme();
-    let charSlice;
-    const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
-    const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
-    const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
-    if (greaterThanMid) charSlice = 80;
-    else if (smallToMid) charSlice = 40;
-    else if (lessThanSmall) charSlice = 15;
-    
-    
+    const handleAnnouncement = async () => {
+        if (!announcementEditable) {
+            setAnnouncementEditable(1);
+            return;
+        }
+        const requestParams = {
+            path: `http://127.0.0.1:8080/course/${params.cid}/announcement`,
+            method: "PUT",
+            body: {
+                authorToken: userToken,
+                secretToken: secretToken,
+                announcement: announcement
+            }
+        };
+        const responseJSON = await APICall(requestParams);
+        if (responseJSON["response-type"] === "Error") {
+            setAnnouncementProps({
+                label: responseJSON.description,
+                type: "Error"
+            });
+        } else {
+            setAnnouncementProps({
+                label: "New announcement",
+                type: "Success"
+            });
+            setAnnouncementEditable(1 - announcementEditable);
+        }
+    }
+
+    const StandardBlock = (
+        <CardContent>
+            <Typography variant="h6" color="text.secondary">
+                Announcement
+            </Typography>
+            <Typography sx={{ mt: 2, fontWeight: "bold" }} color="text.primary">
+                {courseData.announcement === "" ? "No current announcements" : courseData.announcement}
+            </Typography>
+        </CardContent>
+    );
+    const AuthorBlock = (
+        <>
+            <CardContent>
+                <Typography variant="h6" color="text.secondary">
+                    Announcement
+                </Typography>
+                <Typography
+                    sx={{ mt: 2, fontWeight: "bold" }} color="text.primary"
+                    dangerouslySetInnerHTML={{ __html: announcement === "" ? "No current announcements" : announcement.replace(/\n/g, "<br />") }}
+                />
+            </CardContent>
+            <Grid container justifyContent="flex-end">
+                <Button variant="contained" sx={{ mr: 1.5, mb: 1.5 }} startIcon={<EditIcon />} onClick={handleAnnouncement}>
+                    Edit
+                </Button>
+            </Grid>
+        </>
+    );
+    const AuthorEditableBlock = (
+        <>
+            <CardContent>
+                <Typography variant="h6" color="text.secondary">
+                    Announcement
+                </Typography>
+                <Typography sx={{ mt: 2, fontWeight: "bold" }} color="text.primary">
+                    <TextField
+                        fullWidth label={announcementProps.label} error={announcementProps.type === "Error" ? 1 : 0}
+                        value={announcement} onChange={e => setAnnouncement(e.target.value)}
+                        variant="standard" multiline maxRows={10}
+                    />
+                </Typography>
+            </CardContent>
+            <Grid container justifyContent="flex-end">
+                <Button variant="contained" sx={{ mr: 1.5, mb: 1.5 }} startIcon={<DoneIcon />} onClick={handleAnnouncement}>
+                    Save
+                </Button>
+            </Grid>
+        </>
+    );
+
     return (
         <Container disableGutters maxWidth="lg">
 			<Box sx={{		
@@ -136,14 +221,15 @@ const CoursePage = () => {
                 <Grid sx={{ mt: 1 }} container spacing={2}>
                     <Grid item xs={12} sm={4}>
                         <Card variant="outlined">
-                            <CardContent>
-                                <Typography variant="h6" color="text.secondary">
-                                    Announcements
-                                </Typography>
-                                <Typography sx={{ mt: 2, fontWeight: "bold" }} color="text.primary">
-                                    {courseData.announcement === "" ? "No current announcements" : courseData.announcement}
-                                </Typography>
-                            </CardContent>
+                            {courseData.author.userToken !== userToken &&
+                                [StandardBlock]
+                            }
+                            {courseData.author.userToken === userToken && announcementEditable === 0 &&
+                                [AuthorBlock]
+                            }
+                            {courseData.author.userToken === userToken && announcementEditable === 1 &&
+                                [AuthorEditableBlock]
+                            }
                         </Card>
                     </Grid>
                     <Grid item xs={12} sm={8}>

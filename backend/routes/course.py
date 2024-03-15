@@ -129,7 +129,7 @@ async def readComments(courseToken: str):
         "data": courseComments
     }
 
-@router.put("/{courseToken}/annoucement")
+@router.put("/{courseToken}/announcement")
 async def updateAnnouncement(courseToken: str, announcementData: CourseAnnouncementModel):
     announcementData = announcementData.dict()
     courseData = EasyEduDB.Courses.find_one({"courseToken": courseToken})

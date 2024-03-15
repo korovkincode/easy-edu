@@ -51,10 +51,11 @@ const TaskPage = () => {
                                 </Typography>
                                 <Typography inline align="right" fontWeight="fontWeightBold">Deadline: {task.deadline}</Typography>
                             </Grid>
-                            <Divider sx={{ mt: 3, ml: 5, mb: 2 }} color="#007B83" />
-                            {task.desc.split("\n").map(c =>
-                                <Typography sx={{ ml: 5 }}>{c}</Typography>    
-                            )}
+                            <Divider sx={{ mt: 3, ml: 5 }} color="#007B83" />
+                            <Typography 
+                                sx={{ ml: 5 }}
+                                dangerouslySetInnerHTML={{ __html: task.desc.replace(/\n/g, "<br />") }}
+                            />
                             <Divider sx={{ mt: 3, ml: 5 }} color="#E8EAED" />
                         </CardContent>
                     </Grid>
