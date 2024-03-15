@@ -154,9 +154,10 @@ const CoursePage = () => {
             <Typography variant="h6" color="text.secondary">
                 Announcement
             </Typography>
-            <Typography sx={{ mt: 2, fontWeight: "bold" }} color="text.primary">
-                {courseData.announcement === "" ? "No current announcements" : courseData.announcement}
-            </Typography>
+            <Typography
+                sx={{ mt: 2, fontWeight: "bold" }} color="text.primary"
+                dangerouslySetInnerHTML={{ __html: announcement === "" ? "No current announcements" : announcement.replace(/\n/g, "<br />") }}
+            />
         </CardContent>
     );
     const AuthorBlock = (
