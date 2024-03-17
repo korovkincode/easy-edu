@@ -2,7 +2,7 @@ import sys
 sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
-from models.models import CourseModel, CourseCommentModel, CourseAnnouncementModel
+from models.models import CourseModel, CourseCommentModel, AnnouncementModel
 from config.config import EasyEduDB
 import uuid
 
@@ -48,7 +48,7 @@ async def createCourse(courseData: CourseModel):
         }
 
 @router.get("/{courseToken}")
-async def getCourse(courseToken):
+async def readCourse(courseToken):
     courseData = EasyEduDB.Courses.find_one(
         {"courseToken": courseToken},
         {"_id": 0}
@@ -130,7 +130,7 @@ async def readComments(courseToken: str):
     }
 
 @router.put("/{courseToken}/announcement")
-async def updateAnnouncement(courseToken: str, announcementData: CourseAnnouncementModel):
+async def updateAnnouncement(courseToken: str, announcementData: AnnouncementModel):
     announcementData = announcementData.dict()
     courseData = EasyEduDB.Courses.find_one({"courseToken": courseToken})
     if courseData is None:

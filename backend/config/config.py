@@ -11,3 +11,4 @@ class EasyEduDB:
         cls.UsersToCourses = cls.db.UsersToCourses
         cls.Courses = cls.db.Courses
         cls.CourseComments = cls.db.CourseComments
+        cls.Materials = cls.db.Materials
