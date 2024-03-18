@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class UserCredentialsModel(BaseModel):
+class UserAuthModel(BaseModel):
     username: str
     password: str
 
-class UserTokenCredentialsModel(BaseModel):
+class UserCredentialsModel(BaseModel):
     userToken: str
     secretToken: str
 

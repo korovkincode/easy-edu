@@ -3,13 +3,13 @@ sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
 from config.config import EasyEduDB
-from models.models import UserModel, UserCredentialsModel, UserCourseModel
+from models.models import UserModel, UserAuthModel, UserCredentialsModel, UserCourseModel
 import uuid
 
 router = APIRouter()
 
 @router.post("/auth")
-async def authUser(userData: UserCredentialsModel):
+async def authUser(userData: UserAuthModel):
     userData = userData.dict()
     userData = EasyEduDB.Users.find_one({
         "username": userData["username"],
@@ -97,14 +97,10 @@ async def readUserByUsername(username: str):
         "data": userData
     }
 
-@router.put("/")
-async def updateUser(userData: UserModel):
+@router.put("/{userToken}")
+async def updateUser(userToken: str, userData: UserModel):
     userData = userData.dict()
-    if userData.get("userToken", None) is None:
-        return {
-            "response-type": "Error",
-            "description": "User token should be passed"
-        }
+    userData["userToken"] = userToken
     if userData.get("secretToken", None) is None:
         return {
             "response-type": "Error",
@@ -151,11 +147,18 @@ async def updateUser(userData: UserModel):
         }
 
 @router.delete("/{userToken}")
-async def deleteUser(userToken: str):
-    if EasyEduDB.Users.find_one({"userToken": userToken}) is None:
+async def deleteUser(userToken: str, userData: UserCredentialsModel):
+    userData = userData.dict()
+    findUser = EasyEduDB.Users.find_one({"userToken": userToken})
+    if findUser is None:
         return {
             "response-type": "Error",
             "description": "User does not exist"
+        }
+    if findUser["secretToken"] != userData["secretToken"]:
+        return {
+            "response-type": "Error",
+            "description": "Secret token is not matching"
         }
     try:
         EasyEduDB.Users.delete_one({"userToken": userToken})

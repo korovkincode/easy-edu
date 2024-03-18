@@ -2,7 +2,7 @@ import sys
 sys.path.append("../config")
 sys.path.append("../models")
 from fastapi import APIRouter
-from models.models import MaterialModel, UserTokenCredentialsModel
+from models.models import MaterialModel, UserCredentialsModel
 from config.config import EasyEduDB
 import uuid
 
@@ -106,7 +106,7 @@ async def updateMaterial(materialToken: str, materialData: MaterialModel):
         }
 
 @router.delete("/{materialToken}")
-async def deleteMaterial(materialToken: str, userData: UserTokenCredentialsModel):
+async def deleteMaterial(materialToken: str, userData: UserCredentialsModel):
     userData = userData.dict()
     findMaterial = EasyEduDB.Materials.find_one({"materialToken": materialToken})
     if findMaterial is None:
