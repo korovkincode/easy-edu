@@ -31,6 +31,7 @@ async def authUser(userData: UserAuthModel):
 @router.post("/")
 async def createUser(userData: UserModel):
     userData = userData.dict()
+    del userData["userCredentials"]
     userData["userToken"] = uuid.uuid4().hex
     userData["secretToken"] = uuid.uuid4().hex
     if EasyEduDB.Users.find_one({"username": userData["username"]}) is not None:
@@ -100,12 +101,14 @@ async def readUserByUsername(username: str):
 @router.put("/{userToken}")
 async def updateUser(userToken: str, userData: UserModel):
     userData = userData.dict()
-    userData["userToken"] = userToken
-    if userData.get("secretToken", None) is None:
+    if userData.get("userCredentials", None) is None:
         return {
             "response-type": "Error",
-            "description": "Secret token should be passed"
+            "description": "User credentials should be passed"
         }
+    userData["userToken"] = userToken
+    userData["secretToken"] = userData["userCredentials"]["secretToken"]
+    del userData["userCredentials"]
     if userData.get("previousPassword", None) is None:
         return {
             "response-type": "Error",

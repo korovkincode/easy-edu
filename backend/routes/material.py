@@ -47,6 +47,9 @@ def validate(materialData, update=0):
 @router.post("/")
 async def createMaterial(materialData: MaterialModel):
     materialData = materialData.dict()
+    materialData["authorToken"] = materialData["authorCredentials"]["userToken"]
+    materialData["secretToken"] = materialData["authorCredentials"]["secretToken"]
+    del materialData["authorCredentials"]
     validation = validate(materialData)
     if not validation["status"]:
         return validation["feedback"]
@@ -85,6 +88,9 @@ async def readMaterial(materialToken: str):
 async def updateMaterial(materialToken: str, materialData: MaterialModel):
     materialData = materialData.dict()
     materialData["materialToken"] = materialToken
+    materialData["authorToken"] = materialData["authorCredentials"]["userToken"]
+    materialData["secretToken"] = materialData["authorCredentials"]["secretToken"]
+    del materialData["authorCredentials"]
     validation = validate(materialData, update=1)
     if not validation["status"]:
         return validation["feedback"]

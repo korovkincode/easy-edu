@@ -10,8 +10,7 @@ class UserCredentialsModel(BaseModel):
     secretToken: str
 
 class UserModel(BaseModel):
-    userToken: Optional[str] = None
-    secretToken: Optional[str] = None
+    userCredentials: Optional[UserCredentialsModel] = None
     username: str
     password: str
     previousPassword: Optional[str] = None
@@ -30,19 +29,16 @@ class CourseModel(BaseModel):
     description: str
 
 class CourseCommentModel(BaseModel):
-    userToken: str
-    secretToken: str
+    authorCredentials: UserCredentialsModel
     comment: str
     creationDate: str
 
 class AnnouncementModel(BaseModel):
-    authorToken: str
-    secretToken: str
+    authorCredentials: UserCredentialsModel
     announcement: str
 
 class MaterialModel(BaseModel):
-    authorToken: str
-    secretToken: str
+    authorCredentials: UserCredentialsModel
     courseToken: str
     description: str
     creationDate: str

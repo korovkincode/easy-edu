@@ -78,7 +78,10 @@ async def createComment(courseToken: str, commentData: CourseCommentModel):
             "response-type": "Error",
             "description": "No such course"
         }
-    if EasyEduDB.Users.find_one({"userToken": commentData["userToken"], "secretToken": commentData["secretToken"]}) is None:
+    commentData["authorToken"] = commentData["authorCredentials"]["userToken"]
+    commentData["secretToken"] = commentData["authorCredentials"]["secretToken"]
+    del commentData["authorCredentials"]
+    if EasyEduDB.Users.find_one({"userToken": commentData["authorToken"], "secretToken": commentData["secretToken"]}) is None:
         return {
             "response-type": "Error",
             "description": "No such user"
@@ -90,7 +93,7 @@ async def createComment(courseToken: str, commentData: CourseCommentModel):
     else:
         courseCommentsList = courseComments["comments"]
     courseCommentsList.append({
-        "authorToken": commentData["userToken"],
+        "authorToken": commentData["authorToken"],
         "comment": commentData["comment"],
         "creationDate": commentData["creationDate"]
     })
@@ -132,6 +135,9 @@ async def readComments(courseToken: str):
 @router.put("/{courseToken}/announcement")
 async def updateAnnouncement(courseToken: str, announcementData: AnnouncementModel):
     announcementData = announcementData.dict()
+    announcementData["authorToken"] = announcementData["authorCredentials"]["userToken"]
+    announcementData["secretToken"] = announcementData["authorCredentials"]["secretToken"]
+    del announcementData["authorCredentials"]
     courseData = EasyEduDB.Courses.find_one({"courseToken": courseToken})
     if courseData is None:
         return {
